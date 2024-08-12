@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float      mySpeed      = 3.5f;
-    [SerializeField] private GameObject laserPrefab;
-    [SerializeField] private Vector3    laserOffest  = new Vector3(0,0.9f,0);
-    [SerializeField] private float      fireRate     = 0.15f;
-    [SerializeField] private bool       laserCanFire = true;
+    [SerializeField] private float        mySpeed      = 3.5f;
+    [SerializeField] private float        fireRate     = 0.05f;
+    [SerializeField] private int          playerLives  = 3;
+    [SerializeField] private bool         laserCanFire = true;
+    [SerializeField] private Vector3      laserOffest  = new Vector3(0, 1.006f, 0);
+    [SerializeField] private GameObject   laserPrefab;
+    [SerializeField] private SpawnManager spawnManager;
 
     void Start()
     {
+        if (spawnManager == null) { Debug.LogError("The Spawn Manager is NULL."); }
+        if (laserPrefab == null) { Debug.LogError("The Laser Prefab is NULL."); }
+
         transform.position = new Vector3(0, 0, 0);
     }
 
@@ -25,14 +30,8 @@ public class Player : MonoBehaviour
            ) { FireLaser(); }
     }
 
-    bool playerHasFired() { return Input.GetKeyDown(KeyCode.Space); }
-
     void MovePlayer()
     {
-        // float horizontalInput = Input.GetAxis("Horizontal");
-        // float verticalInput   = Input.GetAxis("Vertical");
-        // transform.Translate(new Vector3(1 * horizontalInput
-        //                                , 1 * verticalInput
         transform.Translate(new Vector3( Input.GetAxis("Horizontal")
                                        , Input.GetAxis("Vertical")
                                        , 0
@@ -41,23 +40,26 @@ public class Player : MonoBehaviour
 
     void CheckBoundaries()
     {
-        //Mathf.Abs(transform.position.x) < 11.25 ? transform.position.x : -transform.position.x
-        //Mathf.Clamp(transform.position.y, -4, 0)
         transform.position = new Vector3( CheckLeftRight(transform.position.x)
                                         , CheckTopBottom(transform.position.y)
                                         , 0);
     }
 
-    float CheckLeftRight(float x) {
+    float CheckLeftRight(float x) 
+    {
         float leftRightBoundary = 11.2f;
         return Mathf.Abs(x) < leftRightBoundary ? x : -x; 
     }
 
-    float CheckTopBottom(float y) {
+    float CheckTopBottom(float y) 
+    {
         float topBoundary    =  0;
         float bottomBoundary = -4;
         return Mathf.Clamp(y, bottomBoundary, topBoundary); 
     }
+
+    bool playerHasFired()
+            { return Input.GetKeyDown(KeyCode.Space); }
 
     void FireLaser()
     {
@@ -70,5 +72,18 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(fireRate);
         laserCanFire = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+            { if (other.tag == "Enemy") { TakeDamage(); } }
+
+    public void TakeDamage()
+    {
+        playerLives--;
+        if (playerLives < 1) 
+        {
+            spawnManager.PlayerDied();
+            Destroy(this.gameObject);  
+        }
     }
 }
