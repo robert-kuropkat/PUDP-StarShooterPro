@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    [SerializeField] float mySpeed = 8.0f;
+    [SerializeField] private float mySpeed = 8.0f;
 
-    void Start()  
-            { Destroy(this.gameObject, 3); }
+    private void Start()  
+    {
+        GameObject weaponsContainer = GameObject.FindGameObjectWithTag("Weapons Container");
+        if (  weaponsContainer      != null
+           && this.transform.parent == null) { transform.parent = weaponsContainer.transform; }
+        Destroy(this.gameObject, 3); 
+    }
 
-    void Update() 
+    private void Update() 
             { transform.Translate(Vector3.up * Time.deltaTime * mySpeed); }
 
     private void OnTriggerEnter2D(Collider2D other)
-            { Destroy(this.gameObject); }
+            { if (other.tag == "Enemy") { Destroy(this.gameObject); } }
 }

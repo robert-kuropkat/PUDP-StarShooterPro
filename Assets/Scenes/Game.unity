@@ -121,6 +121,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &530792611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 530792612}
+  m_Layer: 0
+  m_Name: Weapons Fire
+  m_TagString: Weapons Container
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &530792612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530792611}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.48295373, y: 0.16803786, z: -1.4717493}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &606388762
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +183,10 @@ MonoBehaviour:
   keepSpawning: 1
   enemyPrefab: {fileID: 7146149911813876704, guid: af46d1423d61c8245b2f1163d131450b,
     type: 3}
+  tripleShotPUPrefab: {fileID: 1682694201612610876, guid: eb724386d5ef32d49996d84b9ab3fac2,
+    type: 3}
   enemyContainer: {fileID: 1879174202}
+  powerUpContainer: {fileID: 1379045096}
 --- !u!4 &606388764
 Transform:
   m_ObjectHideFlags: 0
@@ -166,6 +199,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1879174203}
+  - {fileID: 1379045097}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -344,6 +378,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1379045096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1379045097}
+  m_Layer: 0
+  m_Name: PowerUp Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1379045097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1379045096}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 606388764}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1822897211
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,12 +440,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mySpeed: 3.5
+  fireRate: 0.05
+  tripleShotTimer: 5
+  playerLives: 3
+  laserCanFire: 1
+  tripleShot: 0
+  laserOffest: {x: 0, y: 0.9, z: 0}
   laserPrefab: {fileID: 6354432022281141656, guid: f3c2233f6a70fb84f92cdd7fb34e7333,
     type: 3}
-  laserOffest: {x: 0, y: 0.9, z: 0}
-  fireRate: 0.05
-  laserCanFire: 1
-  playerLives: 3
+  tripleShotPrefab: {fileID: 3816671260182256485, guid: feb84d6f0a8fcbd4ca1d640d80863c05,
+    type: 3}
   spawnManager: {fileID: 606388763}
 --- !u!212 &1822897213
 SpriteRenderer:

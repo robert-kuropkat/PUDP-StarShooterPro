@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] float mySpeed = 4f;
+    [SerializeField] private float mySpeed = 4f;
 
-    void Update()
+    private void Update()
     {
         transform.Translate(Vector3.down * Time.deltaTime * mySpeed);
         if (transform.position.y < -8.0f)
