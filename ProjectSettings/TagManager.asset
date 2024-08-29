@@ -8,6 +8,8 @@ TagManager:
   - Laser
   - Weapons Container
   - TripleShotPU
+  - SpeedPU
+  - ShieldPU
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Post Processing
   - 
   - 
   - 
