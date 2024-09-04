@@ -4,37 +4,52 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-    [SerializeField] private float     mySpeed = 3f;
+    //
+    // Speed and Timers
+    //
+    [SerializeField] private float     mySpeed   = 3f;
+    [SerializeField] private float     myTimeOut = 5f;
+    //
+    // Game Objects populated in Inspector
+    //
     [SerializeField] private AudioClip myAudioClip;
 
-    private void Start()                            
-        { Destroy(this.gameObject, 5); }
+    //
+    // Game Control             ============================================================
+    //
 
-    private void Update()                           
-        { transform.Translate(Vector3.down * Time.deltaTime * mySpeed); }
+    private void NullCheckOnStartup()
+    {
+        if (myAudioClip == null) { Debug.LogError("Audio Clip is NULL"); }
+    }
+
+    private void Start()                            
+    {
+        NullCheckOnStartup();
+        Destroy(this.gameObject, myTimeOut); 
+    }
+
+    private void Update() 
+        { MoveMe(); }
+
+    //
+    // Watchdogs                ============================================================
+    //
 
     private void OnTriggerEnter2D(Collider2D other)
-    {
-        if ( other.tag == "Player" ) 
-        {
-            AudioSource.PlayClipAtPoint(myAudioClip, Camera.main.transform.position, 1f);
-            //AudioSource myAudio = GetComponent<AudioSource>();
-            //if (myAudio == null) { Debug.LogError("PowerUp Audio Source is NULL"); }
-            //                else { myAudio.Play(); Debug.Log("PowerUP Audio!"); }
-            //DisableCollisionComponenets();
-            Destroy(this.gameObject);  
-        } 
-    }
+        { if ( other.tag == "Player" )  { CollectMe(); } }
 
-    private void DisableCollisionComponenets()
-    {
-        Collider2D myCollider = GetComponent<Collider2D>();
-        Renderer myRenderer   = GetComponent<Renderer>();
-        if (myCollider == null) { Debug.LogError("Asteroid Collider is NULL"); }
-                           else { myCollider.enabled = false; }
-        if (myRenderer == null) { Debug.LogError("Asteroid Renderer is NULL"); }
-                           else { myRenderer.enabled = false; }
-    }
+    //
+    // Helper Methods           ============================================================
+    //
 
+    private void MoveMe()
+        { transform.Translate(Vector3.down * Time.deltaTime * mySpeed); }
+
+    private void CollectMe()
+    {
+        AudioSource.PlayClipAtPoint(myAudioClip, Camera.main.transform.position, 1f);
+        Destroy(this.gameObject);
+    }
 
 }

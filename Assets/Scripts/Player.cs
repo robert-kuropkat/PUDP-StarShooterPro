@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    //
+    // Speed, Boundaries and Timers
+    //
     [SerializeField] private float        mySpeed           = 3.5f;
+    [SerializeField] private int          speedUp           = 0;
     [SerializeField] private float        fireRate          = .15f;
     [SerializeField] private float        tripleShotTimer   = 5f;
     [SerializeField] private float        speedUpTimer      = 5f;
@@ -12,24 +16,32 @@ public class Player : MonoBehaviour
     [SerializeField] private float        leftRightBoundary = 11.2f;
     [SerializeField] private float        topBoundary       = 0;
     [SerializeField] private float        bottomBoundary    = -4;
+    [SerializeField] private Vector3      laserOffest       = new Vector3(0, 1.006f, 0);
+    //
+    // Game Counters
+    //
     [SerializeField] private int          playerLives       = 3;
-    [SerializeField] private int          speedUp           = 0;
     [SerializeField] private int          playerScore       = 0;
+    //
+    // Flags
+    //
     [SerializeField] private bool         laserCanFire      = true;
     [SerializeField] private bool         tripleShot        = false;
     [SerializeField] private bool         shieldsUp         = false;
-    [SerializeField] private Vector3      laserOffest       = new Vector3(0, 1.006f, 0);
-    [SerializeField] private GameObject   laserPrefab;
-    [SerializeField] private GameObject   tripleShotPrefab;
-    [SerializeField] private GameObject   shieldAnim;
-    [SerializeField] private GameObject[] fireEngineAnims;
+    //
+    // Game Objects populated in Inspector
+    //
     [SerializeField] private SpawnManager spawnManager;
     [SerializeField] private UIManager    uiManager;
     [SerializeField] private GameManager  gameManager;
+    [SerializeField] private GameObject   laserPrefab;
+    [SerializeField] private GameObject   tripleShotPrefab;
+    [SerializeField] private GameObject   shieldAnim;
     [SerializeField] private Animator     myExplosion;
-
-
-
+    [SerializeField] private GameObject[] fireEngineAnims;
+    //
+    // Properties
+    //
     private bool PlayerHasFired  
         { get { return Input.GetKeyDown(KeyCode.Space); } }
 
@@ -42,6 +54,10 @@ public class Player : MonoBehaviour
                  : fireEngineAnims[0].activeSelf ? 1 : 0; ; // choose other (inactive) engine on second
         }
     }
+
+    //
+    // Game Control             ============================================================
+    //
 
     private void Start()
     {
@@ -66,54 +82,35 @@ public class Player : MonoBehaviour
            ) { FireLaser(); }
     }
 
-    public void EnemyDestroyed ()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        playerScore++;
-        UIManager myUI = uiManager.GetComponent<UIManager>();
-        if (myUI == null) { Debug.LogError("UI game object is NULL"); }
-                     else { myUI.NewScore(playerScore); }
-    }
-
-    private void MovePlayer()
-    {
-        transform.Translate(new Vector3( Input.GetAxis("Horizontal")
-                                       , Input.GetAxis("Vertical")
-                                       , 0
-                                       ) * Time.deltaTime * (mySpeed+speedUp));
-    }
-
-    private void CheckBoundaries()
-    {
-        transform.position = new Vector3( CheckLeftRight(transform.position.x)
-                                        , CheckTopBottom(transform.position.y)
-                                        , 0);
-    }
-
-    private float CheckLeftRight(float x) 
-    {
-        return Mathf.Abs(x) < leftRightBoundary ? x : -x; 
-    }
-
-    private float CheckTopBottom(float y) 
-    {
-        return Mathf.Clamp(y, bottomBoundary, topBoundary); 
-    }
-
-    private void FireLaser()
-    {
-        if (tripleShot)
+        switch (other.tag)
         {
-            Instantiate( tripleShotPrefab
-                       , transform.position + laserOffest
-                       , Quaternion.identity);
-        } else {
-            Instantiate( laserPrefab
-                       , transform.position + laserOffest
-                       , Quaternion.identity);
+            case "Enemy":
+                TakeDamage();
+                break;
+            case "Enemy Laser":
+                if (other.transform.parent.GetComponent<EnemyFire>().HasHit) { return; }
+                other.transform.parent.GetComponent<EnemyFire>().HasHit = true;
+                TakeDamage();
+                break;
+            case "TripleShotPU":
+                if (!tripleShot) { StartCoroutine(PowerUpTripleShot()); }
+                break;
+            case "SpeedPU":
+                if (speedUp == 0) { StartCoroutine(PowerUpSpeed()); }
+                break;
+            case "ShieldPU":
+                if (!shieldsUp) { StartCoroutine(PowerUpShield()); }
+                break;
+            default:
+                break;
         }
-        laserCanFire = false;
-        StartCoroutine(LaserCoolDown());
     }
+
+    //
+    // Watchdogs            ============================================================
+    //
 
     private IEnumerator LaserCoolDown()
     {
@@ -144,25 +141,59 @@ public class Player : MonoBehaviour
         shieldAnim.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)        
-    { 
-        switch (other.tag)
+    //
+    // Helper Methods           ============================================================
+    //
+
+    // Movement
+
+    private void MovePlayer()
+    {
+        transform.Translate(new Vector3( Input.GetAxis("Horizontal")
+                                       , Input.GetAxis("Vertical")
+                                       , 0
+                                       ) * Time.deltaTime * (mySpeed+speedUp));
+    }
+
+    private void CheckBoundaries()
+    {
+        transform.position = new Vector3( CheckLeftRight(transform.position.x)
+                                        , CheckTopBottom(transform.position.y)
+                                        , 0);
+    }
+
+    private float CheckLeftRight(float x) 
+        { return Mathf.Abs(x) < leftRightBoundary ? x : -x;  }
+
+    private float CheckTopBottom(float y) 
+        { return Mathf.Clamp(y, bottomBoundary, topBoundary);  }
+
+    // Damage
+
+    private void FireLaser()
+    {
+        if (playerLives < 1) { return; }
+
+        if (tripleShot)
         {
-            case "Enemy":
-                TakeDamage();
-                break;
-            case "TripleShotPU":
-                if (!tripleShot)  { StartCoroutine(PowerUpTripleShot()); }
-                break;
-            case "SpeedPU":
-                if (speedUp == 0) { StartCoroutine(PowerUpSpeed()); }
-                break;
-            case "ShieldPU":
-                if (!shieldsUp)   { StartCoroutine(PowerUpShield()); }
-                break;
-            default:
-                break;
+            Instantiate( tripleShotPrefab
+                       , transform.position + laserOffest
+                       , Quaternion.identity);
+        } else {
+            Instantiate( laserPrefab
+                       , transform.position + laserOffest
+                       , Quaternion.identity);
         }
+        laserCanFire = false;
+        StartCoroutine(LaserCoolDown());
+    }
+
+    public void EnemyDestroyed()
+    {
+        playerScore++;
+        UIManager myUI = uiManager.GetComponent<UIManager>();
+        if (myUI == null) { Debug.LogError("UI game object is NULL"); }
+        else              { myUI.NewScore(playerScore); }
     }
 
     private void TakeDamage()

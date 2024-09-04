@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    //
+    // Properties
+    //
+
     private bool gameOver = false;
     public bool GameOver
     {
@@ -23,10 +27,17 @@ public class GameManager : MonoBehaviour
         set { gameLive = value; }
     }
 
-    void Update()
+    //
+    // Game Control         ============================================================
+    //
+
+    private void Update()
     {
-        if (  Input.GetKeyDown(KeyCode.R)
-           && gameOver) { SceneManager.LoadScene("Game"); }
+        if (  Input.GetKeyDown(KeyCode.R)           // Restart game
+           && gameOver ) 
+           {  SceneManager.LoadScene("Game"); }
+        if (  Input.GetKeyDown(KeyCode.Escape) )    // Exit game
+           {  Application.Quit(); }
     }
 
 }

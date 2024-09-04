@@ -4,30 +4,53 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    [SerializeField] private float     mySpeed = 8.0f;
+    //
+    // Speed and Timers
+    //
+    [SerializeField] private float mySpeed   = 8.0f;
+    [SerializeField] private float myTimeOut = 3f;
+
+    //
+    // Game Control             ============================================================
+    //
 
     private void Start()  
     {
-        GameObject  weaponsContainer = GameObject.FindGameObjectWithTag("Weapons Container");
-        if (  weaponsContainer      != null
-           && this.transform.parent == null) { transform.parent = weaponsContainer.transform; }
-        Destroy(this.gameObject, 3); 
+        PutInContainer();
+        Destroy(this.gameObject, myTimeOut); 
     }
 
     private void Update() 
-            { transform.Translate(Vector3.up * Time.deltaTime * mySpeed); }
+    {
+        if   ( transform.tag == "Enemy Laser" )
+             { MoveEnemyLaser();  }
+        else { MovePlayerLaser(); }
+    }
 
     private void OnTriggerEnter2D(Collider2D other)        
-    { 
-        if (other.tag == "Enemy") 
-        {
-            Collider2D  myCollider = GetComponent<Collider2D>();
-            Renderer    myRenderer = GetComponent<Renderer>();
-            if (myCollider == null) { Debug.LogError("Laser Collider2D is NULL"); }
-                               else { myCollider.enabled = false; }
-            if (myRenderer == null) { Debug.LogError("Laser Renderer is NULL"); }
-                               else { myRenderer.enabled = false; }
-            Destroy(this.gameObject, 1.5f); 
-        } 
+    {
+        if (  other.tag      == "Player" 
+           && transform.tag  == "Enemy Laser" )
+           {  Destroy(this.gameObject, 0.1f); }                               // small delay to disable second laser
+        if (  transform.tag  == "Enemy Laser" ) { return; }                   // If it is Enemy fire and hits anything other than the Player, return.
+        if (  other.tag      == "Enemy"       ) { Destroy(this.gameObject); } // Destroy [Player] laser if it collides with an Enemy
     }
+
+    //
+    // Helper Methods           ============================================================
+    //
+
+    private void MoveEnemyLaser()
+        { transform.Translate(Vector3.up * Time.deltaTime * -mySpeed); }
+
+    private void MovePlayerLaser()
+        { transform.Translate(Vector3.up * Time.deltaTime *  mySpeed); }
+
+    private void PutInContainer()
+    {
+        GameObject weaponsContainer = GameObject.FindGameObjectWithTag("Weapons Container");
+        if (  weaponsContainer      != null
+           && this.transform.parent == null ) { transform.parent = weaponsContainer.transform; }
+    }
+
 }

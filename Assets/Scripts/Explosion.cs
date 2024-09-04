@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    void Start() 
-    {
-        AudioSource myAudio =  GetComponent<AudioSource>();
-        if (myAudio == null) { Debug.LogError("Explosion Audio Source is NULL"); }
-                        else { myAudio.Play(); }
-        Destroy(this, 2.4f); 
-    }
+    //
+    // Timers
+    //
+    [SerializeField] private float explosionTimer = 2.4f;
+
+
+    //
+    // Game Control          ============================================================
+    //
+
+    private void Start() { Destroy(this, explosionTimer); }
 
 }

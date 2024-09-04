@@ -49,8 +49,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mySpeed: 4
+  laserLowerTimer: 2
+  laserUpperTimer: 5
+  explosionTimer: 2.4
+  upperLowerBound: 8
+  leftRightBound: 9
   imDead: 0
   myPlayer: {fileID: 0}
+  laserPrefab: {fileID: 1769212021685593957, guid: 27eac8b2247149f499e872c41191957b,
+    type: 3}
 --- !u!212 &188013801765369476
 SpriteRenderer:
   m_ObjectHideFlags: 0
