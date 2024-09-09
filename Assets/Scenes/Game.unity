@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -651,6 +651,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20a881c2f32b9684f8b1760f9e7d3051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnEnemyTimeLow: 2
+  spawnEnemyTimeHigh: 5
+  spawnPowerUpTimeLow: 5
+  spawnPowerUpTimeHigh: 10
+  screenLimitLeftRight: 11
+  screenLimitTopBottom: 8
   enemyPrefab: {fileID: 7146149911813876704, guid: af46d1423d61c8245b2f1163d131450b,
     type: 3}
   enemyContainer: {fileID: 1879174202}
@@ -1641,6 +1647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mySpeed: 3.5
+  speedUp: 0
   fireRate: 0.15
   tripleShotTimer: 5
   speedUpTimer: 5
@@ -1648,26 +1655,25 @@ MonoBehaviour:
   leftRightBoundary: 11.2
   topBoundary: 0
   bottomBoundary: -4
+  laserOffest: {x: 0, y: 1.006, z: 0}
   playerLives: 3
-  speedUp: 0
   playerScore: 0
   laserCanFire: 1
   tripleShot: 0
   shieldsUp: 0
-  laserOffest: {x: 0, y: 1.006, z: 0}
+  spawnManager: {fileID: 606388763}
+  uiManager: {fileID: 1869133822}
+  gameManager: {fileID: 1366714290}
   laserPrefab: {fileID: 6354432022281141656, guid: f3c2233f6a70fb84f92cdd7fb34e7333,
     type: 3}
   tripleShotPrefab: {fileID: 3816671260182256485, guid: feb84d6f0a8fcbd4ca1d640d80863c05,
     type: 3}
   shieldAnim: {fileID: 1964920177}
+  myExplosion: {fileID: 1596962150185710773, guid: fd86ccc5966906b48a1765d281060a47,
+    type: 3}
   fireEngineAnims:
   - {fileID: 794332663}
   - {fileID: 551735069}
-  spawnManager: {fileID: 606388763}
-  uiManager: {fileID: 1869133822}
-  gameManager: {fileID: 1366714290}
-  myExplosion: {fileID: 1596962150185710773, guid: fd86ccc5966906b48a1765d281060a47,
-    type: 3}
 --- !u!212 &1822897213
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1911,6 +1917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d7cc572d53f7cc4093ff1b73b7e2cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameOverDelay: 0.4
   scoreText: {fileID: 39501508}
   gameOverText: {fileID: 943160379}
   restartText: {fileID: 1351510519}
