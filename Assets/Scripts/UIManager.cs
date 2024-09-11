@@ -49,8 +49,10 @@ public class UIManager : MonoBehaviour
         { scoreText.text = "Score: " + score; }
 
     public void CurrentLives (int lives) 
-        { if (  lives >= 0
-             && lives <  livesSprites.Length ) { livesImage.sprite = livesSprites[lives]; }}
+    { 
+        if ( lives >= 0 && lives <  livesSprites.Length ) 
+           { livesImage.sprite = livesSprites[lives]; }
+    }
 
     //
     //  Helper Methods

@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float        leftRightBoundary = 11.2f;
     [SerializeField] private float        topBoundary       = 0;
     [SerializeField] private float        bottomBoundary    = -4;
+    [SerializeField] private float        myThrusters       = 1.1f;
     [SerializeField] private Vector3      laserOffest       = new Vector3(0, 1.006f, 0);
     //
     // Game Counters
@@ -149,10 +150,12 @@ public class Player : MonoBehaviour
 
     private void MovePlayer()
     {
+        if (Input.GetKeyDown(KeyCode.LeftShift)) { myThrusters = 1.1f; }
+        if (Input.GetKeyUp(KeyCode.LeftShift))   { myThrusters = 1.0f; }
         transform.Translate(new Vector3( Input.GetAxis("Horizontal")
                                        , Input.GetAxis("Vertical")
                                        , 0
-                                       ) * Time.deltaTime * (mySpeed+speedUp));
+                                       ) * Time.deltaTime * (mySpeed+speedUp) * (1 + myThrusters));
     }
 
     private void CheckBoundaries()
