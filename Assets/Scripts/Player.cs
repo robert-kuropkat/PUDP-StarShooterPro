@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float        leftRightBoundary = 11.2f;
     [SerializeField] private float        topBoundary       = 0;
     [SerializeField] private float        bottomBoundary    = -4;
-    [SerializeField] private float        myThrusters       = 1.1f;
+    [SerializeField] private float        ThrusterIncrease  = 1.1f;
     [SerializeField] private Vector3      laserOffest       = new Vector3(0, 1.006f, 0);
     //
     // Game Counters
@@ -53,6 +53,15 @@ public class Player : MonoBehaviour
             return playerLives == 2
                  ? Random.Range(0, 2)                       // choose random engine on first hit
                  : fireEngineAnims[0].activeSelf ? 1 : 0; ; // choose other (inactive) engine on second
+        }
+    }
+
+    private float Thrusters
+    {
+        get
+        {
+            if (Input.GetKey(KeyCode.LeftShift)) { return ThrusterIncrease; }
+            return 1;
         }
     }
 
@@ -128,7 +137,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator PowerUpSpeed()
     {
-        speedUp = 3;
+        speedUp = 3;  // ToDo: This value should be moved up so it can be changed in the inspector
         yield return new WaitForSeconds(speedUpTimer);
         speedUp = 0;
     }
@@ -150,12 +159,10 @@ public class Player : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift)) { myThrusters = 1.1f; }
-        if (Input.GetKeyUp(KeyCode.LeftShift))   { myThrusters = 1.0f; }
         transform.Translate(new Vector3( Input.GetAxis("Horizontal")
                                        , Input.GetAxis("Vertical")
                                        , 0
-                                       ) * Time.deltaTime * (mySpeed+speedUp) * (1 + myThrusters));
+                                       ) * Time.deltaTime * (mySpeed+speedUp) * Thrusters);
     }
 
     private void CheckBoundaries()

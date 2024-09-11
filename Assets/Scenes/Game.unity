@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1655,6 +1655,7 @@ MonoBehaviour:
   leftRightBoundary: 11.2
   topBoundary: 0
   bottomBoundary: -4
+  myThrusters: 1.3
   laserOffest: {x: 0, y: 1.006, z: 0}
   playerLives: 3
   playerScore: 0
