@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1651,17 +1651,15 @@ MonoBehaviour:
   fireRate: 0.15
   tripleShotTimer: 5
   speedUpTimer: 5
-  shieldsUpTimer: 5
   leftRightBoundary: 11.2
   topBoundary: 0
   bottomBoundary: -4
-  myThrusters: 1.3
+  ThrusterIncrease: 1.1
   laserOffest: {x: 0, y: 1.006, z: 0}
   playerLives: 3
   playerScore: 0
   laserCanFire: 1
   tripleShot: 0
-  shieldsUp: 0
   spawnManager: {fileID: 606388763}
   uiManager: {fileID: 1869133822}
   gameManager: {fileID: 1366714290}
@@ -1669,7 +1667,7 @@ MonoBehaviour:
     type: 3}
   tripleShotPrefab: {fileID: 3816671260182256485, guid: feb84d6f0a8fcbd4ca1d640d80863c05,
     type: 3}
-  shieldAnim: {fileID: 1964920177}
+  shieldAnim: {fileID: 1964920181}
   myExplosion: {fileID: 1596962150185710773, guid: fd86ccc5966906b48a1765d281060a47,
     type: 3}
   fireEngineAnims:
@@ -2235,9 +2233,12 @@ GameObject:
   - component: {fileID: 1964920180}
   - component: {fileID: 1964920179}
   - component: {fileID: 1964920178}
+  - component: {fileID: 1964920181}
+  - component: {fileID: 1964920183}
+  - component: {fileID: 1964920182}
   m_Layer: 0
   m_Name: Shields
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2325,6 +2326,71 @@ Transform:
   m_Father: {fileID: 1822897214}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1964920181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964920177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5de49bac42f2d5429b879c7b43455e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shieldsUpTimer: 15
+  shieldsWarningTimer: 5
+  hitsLeft: 0
+  hitLimit: 3
+  spriteRenderer: {fileID: 0}
+  isActive: 0
+--- !u!61 &1964920182
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964920177}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.06273937, y: -0.00000047683716}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.12, y: 5.12}
+    newSize: {x: 5.12, y: 5.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.819583, y: 3.4887981}
+  m_EdgeRadius: 0
+--- !u!50 &1964920183
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964920177}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1969347231 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5502784684460524449, guid: 17c462a5af8d16c4986727deb92c4aec,

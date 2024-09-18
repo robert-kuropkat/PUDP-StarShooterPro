@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float        fireRate          = .15f;
     [SerializeField] private float        tripleShotTimer   = 5f;
     [SerializeField] private float        speedUpTimer      = 5f;
-    [SerializeField] private float        shieldsUpTimer    = 5f;
     [SerializeField] private float        leftRightBoundary = 11.2f;
     [SerializeField] private float        topBoundary       = 0;
     [SerializeField] private float        bottomBoundary    = -4;
@@ -28,7 +27,6 @@ public class Player : MonoBehaviour
     //
     [SerializeField] private bool         laserCanFire      = true;
     [SerializeField] private bool         tripleShot        = false;
-    [SerializeField] private bool         shieldsUp         = false;
     //
     // Game Objects populated in Inspector
     //
@@ -37,7 +35,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameManager  gameManager;
     [SerializeField] private GameObject   laserPrefab;
     [SerializeField] private GameObject   tripleShotPrefab;
-    [SerializeField] private GameObject   shieldAnim;
+    [SerializeField] private Shields      shieldAnim;
     [SerializeField] private Animator     myExplosion;
     [SerializeField] private GameObject[] fireEngineAnims;
     //
@@ -69,7 +67,7 @@ public class Player : MonoBehaviour
     // Game Control             ============================================================
     //
 
-    private void Start()
+    private void NullCheckOnStartup()
     {
         //ToDo:  Add actual error handling rather than just a debug message.
         if (spawnManager     == null) { Debug.LogError("The Spawn Manager is NULL."); }
@@ -78,7 +76,11 @@ public class Player : MonoBehaviour
         if (shieldAnim       == null) { Debug.LogError("The Shield Animation is NULL"); }
         if (uiManager        == null) { Debug.LogError("The UI Manager is NULL"); }
         if (gameManager      == null) { Debug.LogError("Game Manager is NULL"); }
+    }
 
+    private void Start()
+    {
+        NullCheckOnStartup();
         transform.position = new Vector3(0, 0, 0);
     }
 
@@ -111,7 +113,7 @@ public class Player : MonoBehaviour
                 if (speedUp == 0) { StartCoroutine(PowerUpSpeed()); }
                 break;
             case "ShieldPU":
-                if (!shieldsUp) { StartCoroutine(PowerUpShield()); }
+                if (!shieldAnim.IsActive) { shieldAnim.IsActive = true; }
                 break;
             default:
                 break;
@@ -142,20 +144,13 @@ public class Player : MonoBehaviour
         speedUp = 0;
     }
 
-    private IEnumerator PowerUpShield()
-    {
-        shieldsUp = true;
-        shieldAnim.SetActive(true);
-        yield return new WaitForSeconds(shieldsUpTimer);
-        shieldsUp = false;
-        shieldAnim.SetActive(false);
-    }
-
     //
     // Helper Methods           ============================================================
     //
 
-    // Movement
+    //
+    // Movement Methods
+    //
 
     private void MovePlayer()
     {
@@ -178,22 +173,17 @@ public class Player : MonoBehaviour
     private float CheckTopBottom(float y) 
         { return Mathf.Clamp(y, bottomBoundary, topBoundary);  }
 
-    // Damage
+    //
+    // Damage Methods
+    //
 
     private void FireLaser()
     {
         if (playerLives < 1) { return; }
 
-        if (tripleShot)
-        {
-            Instantiate( tripleShotPrefab
-                       , transform.position + laserOffest
-                       , Quaternion.identity);
-        } else {
-            Instantiate( laserPrefab
-                       , transform.position + laserOffest
-                       , Quaternion.identity);
-        }
+        Instantiate((tripleShot) ? tripleShotPrefab : laserPrefab
+                   , transform.position + laserOffest
+                   , Quaternion.identity);
         laserCanFire = false;
         StartCoroutine(LaserCoolDown());
     }
@@ -201,19 +191,18 @@ public class Player : MonoBehaviour
     public void EnemyDestroyed()
     {
         playerScore++;
-        UIManager myUI = uiManager.GetComponent<UIManager>();
-        if (myUI == null) { Debug.LogError("UI game object is NULL"); }
-        else              { myUI.NewScore(playerScore); }
+        uiManager.NewScore(playerScore);
     }
 
     private void TakeDamage()
     {
-        if (shieldsUp)
+        /*
+        if (shieldAnim.IsActive)
         {
-            shieldsUp = false;
-            shieldAnim.SetActive(false);
+            //shieldAnim.TakesHit();
             return;
         }
+        */
 
         playerLives--;
         uiManager.CurrentLives(playerLives);            // report current lives count to dashboard
