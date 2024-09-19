@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     // Game Objects populated in Inspector
     //
     [SerializeField] private TMP_Text    scoreText;
+    [SerializeField] private TMP_Text    ammoText;
     [SerializeField] private TMP_Text    gameOverText;
     [SerializeField] private TMP_Text    restartText;
     [SerializeField] private Image       livesImage;
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
     private void NullCheckOnStartup()
     {
         if (scoreText    == null) { Debug.LogError("Score Text is NULL"); }
+        if (ammoText     == null) { Debug.LogError("Ammo Text is NULL"); }
         if (gameOverText == null) { Debug.LogError("Game Over Text is NULL"); }
         if (restartText  == null) { Debug.LogError("Game Restart Text is NULL"); }
         if (livesImage   == null) { Debug.LogError("Lives Image is NULL"); }
@@ -46,7 +48,10 @@ public class UIManager : MonoBehaviour
     //
 
     public void NewScore(int score)      
-        { scoreText.text = "Score: " + score; }
+        { scoreText.text = "Score : " + score; }
+
+    public void AmmoCount(int count)
+        { ammoText.text = "Ammo: " + count; }
 
     public void CurrentLives (int lives) 
     { 

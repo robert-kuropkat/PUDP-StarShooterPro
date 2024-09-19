@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     //
     [SerializeField] private int          playerLives       = 3;
     [SerializeField] private int          playerScore       = 0;
+    [SerializeField] private int          ammoCount         = 16;
     //
     // Flags
     //
@@ -81,6 +82,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         NullCheckOnStartup();
+        uiManager.AmmoCount(ammoCount);
         transform.position = new Vector3(0, 0, 0);
     }
 
@@ -180,6 +182,9 @@ public class Player : MonoBehaviour
     private void FireLaser()
     {
         if (playerLives < 1) { return; }
+        if (ammoCount   < 1) { return; }
+        ammoCount--;
+        uiManager.AmmoCount(ammoCount);
 
         Instantiate((tripleShot) ? tripleShotPrefab : laserPrefab
                    , transform.position + laserOffest
