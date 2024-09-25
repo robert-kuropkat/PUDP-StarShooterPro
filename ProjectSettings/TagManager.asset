@@ -11,6 +11,7 @@ TagManager:
   - SpeedPU
   - ShieldPU
   - Enemy Laser
+  - AmmoPU
   layers:
   - Default
   - TransparentFX

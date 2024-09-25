@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -394,6 +394,61 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &309675201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 309675202}
+  - component: {fileID: 309675203}
+  m_Layer: 0
+  m_Name: Weapons
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &309675202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309675201}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1822897214}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &309675203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309675201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84174734b0c52ca4aa40eccfc19b8ebc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireRate: 0.15
+  tripleShotTimer: 5
+  ammoCollectible: 15
+  laserOffest: {x: 0, y: 1.006, z: 0}
+  laserCanFire: 1
+  laserPrefab: {fileID: 6354432022281141656, guid: f3c2233f6a70fb84f92cdd7fb34e7333,
+    type: 3}
+  tripleShotPrefab: {fileID: 3816671260182256485, guid: feb84d6f0a8fcbd4ca1d640d80863c05,
+    type: 3}
+  uiManager: {fileID: 1869133822}
+  ammoCount: 16
+  tripleShotEnabled: 0
 --- !u!1 &530792611
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +720,7 @@ MonoBehaviour:
   - {fileID: 1682694201612610876, guid: 9240539bd9b8bb64d9c4dc1c459ca393, type: 3}
   - {fileID: 128587755637543872, guid: 5fc849d9f05ad89439facca489326afc, type: 3}
   - {fileID: 6136820509590751115, guid: 6375b4c27c44dfe4697383e4b49870d0, type: 3}
+  - {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6, type: 3}
   gameManager: {fileID: 1366714290}
 --- !u!4 &606388764
 Transform:
@@ -1781,29 +1837,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mySpeed: 3.5
   speedUp: 0
-  fireRate: 0.15
-  tripleShotTimer: 5
   speedUpTimer: 5
   leftRightBoundary: 11.2
   topBoundary: 0
   bottomBoundary: -4
   ThrusterIncrease: 1.1
-  laserOffest: {x: 0, y: 1.006, z: 0}
   playerLives: 3
   playerScore: 0
-  ammoCount: 15
-  laserCanFire: 1
-  tripleShot: 0
   spawnManager: {fileID: 606388763}
   uiManager: {fileID: 1869133822}
   gameManager: {fileID: 1366714290}
-  laserPrefab: {fileID: 6354432022281141656, guid: f3c2233f6a70fb84f92cdd7fb34e7333,
-    type: 3}
-  tripleShotPrefab: {fileID: 3816671260182256485, guid: feb84d6f0a8fcbd4ca1d640d80863c05,
-    type: 3}
   shieldAnim: {fileID: 1964920181}
   myExplosion: {fileID: 1596962150185710773, guid: fd86ccc5966906b48a1765d281060a47,
     type: 3}
+  myWeapons: {fileID: 309675203}
   fireEngineAnims:
   - {fileID: 794332663}
   - {fileID: 551735069}
@@ -1872,6 +1919,7 @@ Transform:
   - {fileID: 1929239790}
   - {fileID: 794332666}
   - {fileID: 551735072}
+  - {fileID: 309675202}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
