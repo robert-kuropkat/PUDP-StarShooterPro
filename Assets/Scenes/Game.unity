@@ -440,15 +440,19 @@ MonoBehaviour:
   fireRate: 0.15
   tripleShotTimer: 5
   ammoCollectible: 15
+  ammoStartCount: 26
   laserOffest: {x: 0, y: 1.006, z: 0}
   laserCanFire: 1
   laserPrefab: {fileID: 6354432022281141656, guid: f3c2233f6a70fb84f92cdd7fb34e7333,
     type: 3}
   tripleShotPrefab: {fileID: 3816671260182256485, guid: feb84d6f0a8fcbd4ca1d640d80863c05,
     type: 3}
+  laser360Prefab: {fileID: 8430696609072467377, guid: ee7cfdac1458b0c43893638a786d5bca,
+    type: 3}
   uiManager: {fileID: 1869133822}
   ammoCount: 16
   tripleShotEnabled: 0
+  laser360Enabled: 0
 --- !u!1 &530792611
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,6 +725,7 @@ MonoBehaviour:
   - {fileID: 128587755637543872, guid: 5fc849d9f05ad89439facca489326afc, type: 3}
   - {fileID: 6136820509590751115, guid: 6375b4c27c44dfe4697383e4b49870d0, type: 3}
   - {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6, type: 3}
+  - {fileID: 1016275360781342716, guid: eefe0b37469264744a3762ca0d6d2324, type: 3}
   gameManager: {fileID: 1366714290}
 --- !u!4 &606388764
 Transform:

@@ -21,6 +21,7 @@ public class Weapons : MonoBehaviour
     //
     [SerializeField] private GameObject laserPrefab;
     [SerializeField] private GameObject tripleShotPrefab;
+    [SerializeField] private GameObject laser360Prefab;
     [SerializeField] private UIManager  uiManager;
     //
     // Properties
@@ -46,6 +47,20 @@ public class Weapons : MonoBehaviour
             }
     }
 
+    //
+    //  Need a Collected property
+    //
+    [SerializeField] private bool laser360Enabled = false;
+    public bool Laser360Enabled
+    {
+        get { return laser360Enabled; }
+        set
+        {
+            laser360Enabled = value;
+            //StartCoroutine(PowerUpTripleShot());
+        }
+    }
+
     private void NullCheckOnStartup()
     {
         if (laserPrefab      == null) { Debug.LogError("The Laser Prefab is NULL."); }
@@ -62,19 +77,50 @@ public class Weapons : MonoBehaviour
     //
     // Public Methods
     //
-    public void FireLaser()
+    public void FireWeapon()
     {
-        if (!laserCanFire) { return; }
-        if (AmmoCount < 1) { return; }
-        if (TripleShotEnabled) 
-             { AmmoCount = AmmoCount - 3; }
-        else { AmmoCount = AmmoCount - 1; }
+        if (Laser360Enabled) { StartCoroutine(Fire360Laser()); return; }
+        
+        if (!laserCanFire)   { return; }
+        if (AmmoCount < 1)   { return; }
 
-        Instantiate((TripleShotEnabled) ? tripleShotPrefab : laserPrefab
-                   , transform.position + laserOffest
-                   , Quaternion.identity);
+        if   ( TripleShotEnabled )  
+             { FireTripleShot(); }
+        else { FireLaser();      }
+
         laserCanFire = false;
         StartCoroutine(LaserCoolDown());
+    }
+
+    private void FireLaser()
+    {
+        Instantiate( laserPrefab
+                   , transform.position + laserOffest
+                   , Quaternion.identity);
+        AmmoCount = AmmoCount - 1;
+    }
+
+    //
+    // Weapons Fire
+    //
+
+    private IEnumerator Fire360Laser()
+    {
+        Laser360Enabled = false;
+        for (int i = 0; i < 36; i++)
+        {
+            GameObject fire = Instantiate(laser360Prefab, transform.position, Quaternion.identity);
+            fire.transform.Rotate(0, 0, fire.transform.rotation.z + (10 * i));
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void FireTripleShot()
+    {
+        Instantiate( tripleShotPrefab
+                   , transform.position + laserOffest
+                   , Quaternion.identity);
+        AmmoCount = AmmoCount - 3;
     }
 
     public void CollectAmmo() { AmmoCount = AmmoCount + ammoCollectible; }
@@ -82,6 +128,11 @@ public class Weapons : MonoBehaviour
     //
     // Watchdogs            ============================================================
     //
+
+    private IEnumerator Laser360CoolDown()
+    {
+        yield return new WaitForSeconds(0.5f);
+    }
 
     private IEnumerator LaserCoolDown()
     {

@@ -32,6 +32,18 @@ public class Player : MonoBehaviour
     //
     // Properties
     //
+
+    private bool PlayerHasEnabled360Laser
+    {
+        get
+        {
+            if (  Input.GetKeyDown(KeyCode.LeftAlt )
+               || Input.GetKeyDown(KeyCode.RightAlt))
+            {
+                return true;
+            } else { return false; }
+        }
+    }
     private bool PlayerHasFired  
         { get {
                 if (  Input.GetKeyDown(KeyCode.Space) 
@@ -40,13 +52,23 @@ public class Player : MonoBehaviour
               } 
         }
 
-    private int ChooseEngine  // The engine fire animations are stored in an array
-    {                         // This property randomizes which one is chosen first
+    private int ChooseGoodEngine  // The engine fire animations are stored in an array
+    {                             // This property randomizes which one is chosen first
         get
         {
             return playerLives == 2
                  ? Random.Range(0, 2)                       // choose random engine on first hit
                  : fireEngineAnims[0].activeSelf ? 1 : 0; ; // choose other (inactive) engine on second
+        }
+    }
+
+    private int ChooseDamagedEngine  // The engine fire animations are stored in an array
+    {                             // This property randomizes which one is chosen first
+        get
+        {
+            return playerLives == 2
+                 ? Random.Range(0, 2)                       // choose random engine on first hit
+                 : !fireEngineAnims[0].activeSelf ? 1 : 0; ; // choose other (inactive) engine on second
         }
     }
 
@@ -82,7 +104,8 @@ public class Player : MonoBehaviour
     {
         MovePlayer();
         CheckBoundaries();
-        if (PlayerHasFired) { myWeapons.FireLaser(); }
+        // If collected and enabled myWeapons.FireWeapon()
+        if (PlayerHasFired) { myWeapons.FireWeapon(); }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -108,6 +131,9 @@ public class Player : MonoBehaviour
                 break;
             case "AmmoPU":
                 myWeapons.CollectAmmo();
+                break;
+            case "HealthPU":
+                if (playerLives < 3) { CollectHealth();  }
                 break;
             default:
                 break;
@@ -151,7 +177,7 @@ public class Player : MonoBehaviour
         { return Mathf.Clamp(y, bottomBoundary, topBoundary);  }
 
     //
-    // Damage Methods
+    // Damage/Health Methods
     //
 
     public void EnemyDestroyed()
@@ -160,12 +186,19 @@ public class Player : MonoBehaviour
         uiManager.NewScore(playerScore);
     }
 
+    private void CollectHealth()
+    {
+        playerLives++;
+        uiManager.CurrentLives(playerLives);
+        fireEngineAnims[ChooseDamagedEngine].SetActive(false);  // remove damage animation
+    }
+
     private void TakeDamage()
     {
         playerLives--;
         uiManager.CurrentLives(playerLives);            // report current lives count to dashboard
         if (playerLives < 1) { DeathScene(); return; }
-        fireEngineAnims[ChooseEngine].SetActive(true);  // damage animation
+        fireEngineAnims[ChooseGoodEngine].SetActive(true);  // damage animation - Need to reverse the ChooseEngine logic.  New getter?
     }
 
     private void DeathScene()

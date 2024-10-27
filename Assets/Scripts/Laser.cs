@@ -44,7 +44,7 @@ public class Laser : MonoBehaviour
         { transform.Translate(Vector3.up * Time.deltaTime * -mySpeed); }
 
     private void MovePlayerLaser()
-        { transform.Translate(Vector3.up * Time.deltaTime *  mySpeed); }
+        { transform.Translate(Vector3.up * Time.deltaTime * mySpeed); }
 
     private void PutInContainer()
     {
