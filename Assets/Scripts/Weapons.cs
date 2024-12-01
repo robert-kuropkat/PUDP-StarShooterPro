@@ -47,9 +47,6 @@ public class Weapons : MonoBehaviour
             }
     }
 
-    //
-    //  Need a Collected property
-    //
     [SerializeField] private bool laser360Enabled = false;
     public bool Laser360Enabled
     {
@@ -57,9 +54,13 @@ public class Weapons : MonoBehaviour
         set
         {
             laser360Enabled = value;
-            //StartCoroutine(PowerUpTripleShot());
+            if (value) { uiManager.EnableSpiralLaser();  }
+            else       { uiManager.DisableSpiralLaser(); }
         }
     }
+
+    [field: SerializeField]
+    private bool Laser360Armed { get; set; }
 
     private void NullCheckOnStartup()
     {
@@ -72,14 +73,23 @@ public class Weapons : MonoBehaviour
     {
         NullCheckOnStartup();
         AmmoCount = ammoStartCount;
+        //Laser360Enabled = true;
     }
 
     //
     // Public Methods
     //
+
+    public void ArmSpiralLaser()
+    {
+        Laser360Armed = true;
+        uiManager.ArmSpiralLaser();
+    }
+
     public void FireWeapon()
     {
-        if (Laser360Enabled) { StartCoroutine(Fire360Laser()); return; }
+        // check if armed...
+        if (Laser360Enabled && Laser360Armed) { StartCoroutine(Fire360Laser()); return; }
         
         if (!laserCanFire)   { return; }
         if (AmmoCount < 1)   { return; }
@@ -113,6 +123,8 @@ public class Weapons : MonoBehaviour
             fire.transform.Rotate(0, 0, fire.transform.rotation.z + (10 * i));
             yield return new WaitForSeconds(0.1f);
         }
+        Laser360Armed = false;
+        uiManager.DisableSpiralLaser();
     }
 
     private void FireTripleShot()

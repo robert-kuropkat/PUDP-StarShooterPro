@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour
     {
         if (  other.tag == "Player"
            || other.tag == "Laser"
+           || other.tag == "Shield"
            ) { EnemyDeathScene(); }
     }
 

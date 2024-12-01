@@ -13,6 +13,8 @@ TagManager:
   - Enemy Laser
   - AmmoPU
   - HealthPU
+  - SpiralPU
+  - Shield
   layers:
   - Default
   - TransparentFX

@@ -11,7 +11,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float        spawnEnemyTimeHigh   = 5f;
     [SerializeField] private float        spawnPowerUpTimeLow  = 5f;
     [SerializeField] private float        spawnPowerUpTimeHigh = 10f;
-    [SerializeField] private float        screenLimitLeftRight = 11f;
+    [SerializeField] private float        screenLimitLeftRight = 9f;
     [SerializeField] private float        screenLimitTopBottom = 8f;
     //
     // Game Objects populated in Inspector
@@ -25,7 +25,22 @@ public class SpawnManager : MonoBehaviour
     // Properties
     //
     private int ChoosePowerUpIndex
-        { get { return Random.Range(0, powerUpPrefabs.Length);  } }
+        { get 
+            { 
+                int selectIndex = Random.Range(1,51);
+            //
+            // Note: This is dependendent on the order these power ups are placed 
+            //       in the array in the inspector which is wonky.
+            //
+            if      (selectIndex > 0  && selectIndex < 10) { return 0; }  // Triple Shot approx: 19%
+            else if (selectIndex > 9  && selectIndex < 20) { return 1; }  // Speed       approx: 19%
+            else if (selectIndex > 19 && selectIndex < 30) { return 2; }  // Shield      approx: 19%
+            else if (selectIndex > 29 && selectIndex < 40) { return 3; }  // Ammo        approx: 19%
+            else if (selectIndex > 39 && selectIndex < 50) { return 4; }  // Health      approx: 19%
+            else if (selectIndex > 49 && selectIndex < 52) { return 5; }  // Spiral      approx: 4%
+            return 0;
+            } 
+        }
 
     //
     // Game Control              ============================================================

@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     // Speed, Boundaries and Timers
     //
     [SerializeField] private float        mySpeed           = 3.5f;
-    [SerializeField] private int          speedUp           = 0;
+    [SerializeField] private float        currentSpeed      = 0;
+    [SerializeField] private int          speedUp           = 1;
     [SerializeField] private float        speedUpTimer      = 5f;
     [SerializeField] private float        leftRightBoundary = 11.2f;
     [SerializeField] private float        topBoundary       = 0;
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator     myExplosion;
     [SerializeField] private Weapons      myWeapons;
     [SerializeField] private GameObject[] fireEngineAnims;
+    [SerializeField] private MainCamera   mainCamera;
     //
     // Properties
     //
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour
     {
         get
         {
+            if (!myWeapons.Laser360Enabled) { return false; }
             if (  Input.GetKeyDown(KeyCode.LeftAlt )
                || Input.GetKeyDown(KeyCode.RightAlt))
             {
@@ -77,7 +80,7 @@ public class Player : MonoBehaviour
         get
         {
             if (Input.GetKey(KeyCode.LeftShift)) { return ThrusterIncrease; }
-            return 1;
+            return 0;
         }
     }
 
@@ -104,7 +107,8 @@ public class Player : MonoBehaviour
     {
         MovePlayer();
         CheckBoundaries();
-        // If collected and enabled myWeapons.FireWeapon()
+
+        if (PlayerHasEnabled360Laser) { myWeapons.ArmSpiralLaser(); }
         if (PlayerHasFired) { myWeapons.FireWeapon(); }
     }
 
@@ -124,7 +128,7 @@ public class Player : MonoBehaviour
                 if (!myWeapons.TripleShotEnabled) { myWeapons.TripleShotEnabled = true; }
                 break;
             case "SpeedPU":
-                if (speedUp == 0) { StartCoroutine(PowerUpSpeed()); }
+                if (speedUp == 1) { StartCoroutine(PowerUpSpeed()); }
                 break;
             case "ShieldPU":
                 if (!shieldAnim.IsActive) { shieldAnim.IsActive = true; }
@@ -134,6 +138,9 @@ public class Player : MonoBehaviour
                 break;
             case "HealthPU":
                 if (playerLives < 3) { CollectHealth();  }
+                break;
+            case "SpiralPU":
+                myWeapons.Laser360Enabled = true;
                 break;
             default:
                 break;
@@ -148,19 +155,35 @@ public class Player : MonoBehaviour
     {
         speedUp = 3;  // ToDo: This value should be moved up so it can be changed in the inspector
         yield return new WaitForSeconds(speedUpTimer);
-        speedUp = 0;
+        speedUp = 1;
     }
 
     //
     // Movement Methods
     //
 
+    private void UpdateThrusterUI()
+    {
+        int relativeSpeed = 0;
+        if      (Mathf.Approximately(currentSpeed, 0))                                      { relativeSpeed = 0;  }
+        else if (Mathf.Approximately(currentSpeed, mySpeed))                                { relativeSpeed = 25; }
+        else if (Mathf.Approximately(currentSpeed, mySpeed + ThrusterIncrease))             { relativeSpeed = 50; }
+        else if (Mathf.Approximately(currentSpeed, mySpeed * speedUp))                      { relativeSpeed = 75; }
+        else if (Mathf.Approximately(currentSpeed, (mySpeed + ThrusterIncrease) * speedUp)) { relativeSpeed = 100; }
+        uiManager.UpdateThrusterGuage(relativeSpeed);
+    }
+
     private void MovePlayer()
     {
+        currentSpeed = 0;
+        if (  Input.GetAxis("Horizontal") != 0
+           || Input.GetAxis("Vertical")   != 0 )
+           { currentSpeed = (mySpeed + Thrusters) * speedUp; }
+        UpdateThrusterUI();
         transform.Translate(new Vector3( Input.GetAxis("Horizontal")
                                        , Input.GetAxis("Vertical")
                                        , 0
-                                       ) * Time.deltaTime * (mySpeed+speedUp) * Thrusters);
+                                       ) * Time.deltaTime * currentSpeed );
     }
 
     private void CheckBoundaries()
@@ -195,8 +218,9 @@ public class Player : MonoBehaviour
 
     private void TakeDamage()
     {
+        mainCamera.PlayerDamage();                          // invoke Main camera shake
         playerLives--;
-        uiManager.CurrentLives(playerLives);            // report current lives count to dashboard
+        uiManager.CurrentLives(playerLives);                // report current lives count to dashboard
         if (playerLives < 1) { DeathScene(); return; }
         fireEngineAnims[ChooseGoodEngine].SetActive(true);  // damage animation - Need to reverse the ChooseEngine logic.  New getter?
     }

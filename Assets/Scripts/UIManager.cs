@@ -18,8 +18,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text    gameOverText;
     [SerializeField] private TMP_Text    restartText;
     [SerializeField] private Image       livesImage;
+    [SerializeField] private Image       spiralLaserImage;
     [SerializeField] private Sprite[]    livesSprites;
+    [SerializeField] private Sprite[]    spiralSprites;
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private Slider      thrusterGuage;
+    [SerializeField] private Color       thrusterGuageColor = Color.cyan;
 
     //
     // Game Control             ============================================================
@@ -27,12 +31,13 @@ public class UIManager : MonoBehaviour
 
     private void NullCheckOnStartup()
     {
-        if (scoreText    == null) { Debug.LogError("Score Text is NULL"); }
-        if (ammoText     == null) { Debug.LogError("Ammo Text is NULL"); }
-        if (gameOverText == null) { Debug.LogError("Game Over Text is NULL"); }
-        if (restartText  == null) { Debug.LogError("Game Restart Text is NULL"); }
-        if (livesImage   == null) { Debug.LogError("Lives Image is NULL"); }
-        if (gameManager  == null) { Debug.LogError("Game Manager is NULL"); }
+        if (scoreText         == null) { Debug.LogError("Score Text is NULL"); }
+        if (ammoText         == null) { Debug.LogError("Ammo Text is NULL"); }
+        if (gameOverText     == null) { Debug.LogError("Game Over Text is NULL"); }
+        if (restartText      == null) { Debug.LogError("Game Restart Text is NULL"); }
+        if (livesImage       == null) { Debug.LogError("Lives Image is NULL"); }
+        if (spiralLaserImage == null) { Debug.LogError("Spiral Laser Image is NULL"); }
+        if (gameManager      == null) { Debug.LogError("Game Manager is NULL"); }
         // Sprite Array check
     }
 
@@ -41,6 +46,7 @@ public class UIManager : MonoBehaviour
         NullCheckOnStartup();
         InitializeGame();
         StartCoroutine(WatchForGameOver());
+        //spiralLaserImage.enabled = false;
     }
 
     //
@@ -57,6 +63,50 @@ public class UIManager : MonoBehaviour
     { 
         if ( lives >= 0 && lives <  livesSprites.Length ) 
            { livesImage.sprite = livesSprites[lives]; }
+    }
+
+    public void UpdateThrusterGuage(int currentSpeed)
+    {
+        switch (currentSpeed)
+        {
+            case 0:
+                thrusterGuageColor = Color.cyan;
+                break;
+            case 25:
+                thrusterGuageColor = Color.green;
+                break;
+            case 50:
+                thrusterGuageColor = Color.yellow;
+                break;
+            case 75:
+                thrusterGuageColor = new Color(1.0f, 0.64f, 0.0f);
+                break;
+            case 100:
+                thrusterGuageColor = Color.red;
+                break;
+            default:
+                thrusterGuageColor = Color.cyan;
+                break;
+        }
+        thrusterGuage.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = thrusterGuageColor;
+        thrusterGuage.value = currentSpeed;
+    }
+
+    public void EnableSpiralLaser()
+    {
+        spiralLaserImage.sprite = spiralSprites[0];
+        spiralLaserImage.gameObject.SetActive(true); 
+    }
+
+    public void ArmSpiralLaser()
+    {
+        spiralLaserImage.sprite = spiralSprites[1];
+    }
+
+    public void DisableSpiralLaser()
+    {
+        spiralLaserImage.sprite = spiralSprites[0];
+        spiralLaserImage.gameObject.SetActive(false); 
     }
 
     //
