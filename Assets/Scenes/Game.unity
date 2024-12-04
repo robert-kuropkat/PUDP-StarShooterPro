@@ -2221,7 +2221,7 @@ MonoBehaviour:
   fireEngineAnims:
   - {fileID: 794332663}
   - {fileID: 551735069}
-  mainCamera: {fileID: 870996262}
+  mainCamera: {fileID: 870996265}
 --- !u!212 &1822897213
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -61,6 +61,7 @@ public class SpawnManager : MonoBehaviour
     {
         NullCheckOnStartup();
         StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnSideEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
     }
 
@@ -68,6 +69,19 @@ public class SpawnManager : MonoBehaviour
     // Watchdogs                 ============================================================
     //
 
+    private IEnumerator SpawnSideEnemyRoutine()
+    {
+        while (true)
+        {
+            while (gameManager.GameLive)
+            {
+                SpawnSideEnemy();
+                yield return new WaitForSeconds(Random.Range( spawnEnemyTimeLow
+                                                            , spawnEnemyTimeHigh));
+            }
+            yield return null;
+        }
+    }
     private IEnumerator SpawnEnemyRoutine()
     {
         while (true)
@@ -99,6 +113,17 @@ public class SpawnManager : MonoBehaviour
     //
     // Helper Methods            ============================================================
     //
+
+    private void SpawnSideEnemy()
+    {
+        GameObject newEnemy = Instantiate(enemyPrefab
+                                         , new Vector3( -(screenLimitLeftRight + 2)
+                                                      , Random.Range( -screenLimitTopBottom
+                                                                    ,  screenLimitTopBottom), 0)
+                                         , Quaternion.identity);
+        newEnemy.transform.GetComponent<Enemy>().SpawnSide = "LEFT";
+        if (newEnemy != null) { newEnemy.transform.parent = enemyContainer.transform; }
+    }
 
     private void SpawnEnemy()
     {
