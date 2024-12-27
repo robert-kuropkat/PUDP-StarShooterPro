@@ -60,8 +60,70 @@ public class SpawnManager : MonoBehaviour
     private void Start() 
     {
         NullCheckOnStartup();
-        StartCoroutine(SpawnEnemyRoutine());
-        StartCoroutine(SpawnSideEnemyRoutine());
+        //SpawnNewWave();
+        StartCoroutine(WaitforGameStart());
+    }
+
+    private void Update()
+    {
+        if (  Input.GetKeyDown(KeyCode.R)           // Restart game
+           && gameManager.WaveOver)
+        {
+            gameManager.WaveOver = false;
+            gameManager.CurrentWave++;
+            SpawnNewWave();
+            return;
+        }
+    }
+    public void SpawnNewWave()
+    {
+        
+        switch (gameManager.CurrentWave)
+        {
+            case 1:
+                SpawnWave01();
+                break;
+            case 2:
+                SpawnWave01();
+                break;
+            default:
+                SpawnWave01();
+                break;
+        }
+    }
+
+    //
+    // Wave Managers             ============================================================
+    // 
+    //  Variables need:
+    //      - Enemy Count
+    //      - Spawn Speed Range (Low/High)
+
+    private void SpawnWave01()
+    {
+        StartCoroutine(SpawnEnemyRoutine(5, spawnEnemyTimeLow, spawnEnemyTimeHigh));
+        //StartCoroutine(SpawnSideEnemyRoutine(2, spawnEnemyTimeLow, spawnEnemyTimeHigh));
+        StartCoroutine(SpawnPowerUpRoutine());
+    }
+
+    private void SpawnWave02()
+    {
+        StartCoroutine(SpawnEnemyRoutine(30, spawnEnemyTimeLow, spawnEnemyTimeHigh));
+        //StartCoroutine(SpawnSideEnemyRoutine());
+        StartCoroutine(SpawnPowerUpRoutine());
+    }
+
+    private void SpawnWave03()
+    {
+        StartCoroutine(SpawnEnemyRoutine(30, spawnEnemyTimeLow, spawnEnemyTimeHigh));
+        //StartCoroutine(SpawnSideEnemyRoutine());
+        StartCoroutine(SpawnPowerUpRoutine());
+    }
+
+    private void SpawnWave04()
+    {
+        StartCoroutine(SpawnEnemyRoutine(30, spawnEnemyTimeLow, spawnEnemyTimeHigh));
+        //StartCoroutine(SpawnSideEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
     }
 
@@ -69,31 +131,48 @@ public class SpawnManager : MonoBehaviour
     // Watchdogs                 ============================================================
     //
 
-    private IEnumerator SpawnSideEnemyRoutine()
+    //
+    // BUG:  These need to end.  Otherwise the methods above will start new ones
+    //       leaving these running.
+    //       When Enemy count goes to zero it needs to exit.
+    //       The problem is we are starting this with the Start routine as well as update.
+    //       The while(true) is waiting for real game start (destroiy asteroid).
+    //
+
+    private IEnumerator WaitforGameStart()
     {
+        while (!gameManager.GameLive) { yield return null; }
+        gameManager.WaveOver = false;
+        SpawnNewWave();
+    }
+
+    private IEnumerator SpawnSideEnemyRoutine(int enemyCount, float spawnSpeedLow, float spawnSpeedHigh)
+    {
+        gameManager.CurrentEnemyCount += enemyCount;
         while (true)
         {
-            while (gameManager.GameLive)
+            while (enemyCount > 0 && gameManager.GameLive)
             {
                 SpawnSideEnemy();
-                yield return new WaitForSeconds(Random.Range( spawnEnemyTimeLow
-                                                            , spawnEnemyTimeHigh));
+                enemyCount--;
+                yield return new WaitForSeconds(Random.Range( spawnSpeedLow
+                                                            , spawnSpeedHigh));
             }
             yield return null;
         }
     }
-    private IEnumerator SpawnEnemyRoutine()
+    private IEnumerator SpawnEnemyRoutine(int enemyCount, float spawnSpeedLow, float spawnSpeedHigh)
     {
-        while (true)
+        gameManager.CurrentEnemyCount += enemyCount;
+        while (enemyCount > 0 && gameManager.GameLive) 
         {
-            while (gameManager.GameLive) 
-            { 
-                SpawnEnemy();
-                yield return new WaitForSeconds(Random.Range( spawnEnemyTimeLow
-                                                            , spawnEnemyTimeHigh));
-            }
-            yield return null;
+            SpawnEnemy();
+            enemyCount--;
+            //Debug.Log("Enemy Count: " + enemyCount);
+            yield return new WaitForSeconds(Random.Range( spawnSpeedLow
+                                                        , spawnSpeedHigh));
         }
+        //Debug.Log("Closing Spawn Enemy Routine");
     }
 
     private IEnumerator SpawnPowerUpRoutine()

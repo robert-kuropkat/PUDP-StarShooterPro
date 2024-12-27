@@ -31,7 +31,7 @@ public class UIManager : MonoBehaviour
 
     private void NullCheckOnStartup()
     {
-        if (scoreText         == null) { Debug.LogError("Score Text is NULL"); }
+        if (scoreText        == null) { Debug.LogError("Score Text is NULL"); }
         if (ammoText         == null) { Debug.LogError("Ammo Text is NULL"); }
         if (gameOverText     == null) { Debug.LogError("Game Over Text is NULL"); }
         if (restartText      == null) { Debug.LogError("Game Restart Text is NULL"); }
@@ -46,6 +46,7 @@ public class UIManager : MonoBehaviour
         NullCheckOnStartup();
         InitializeGame();
         StartCoroutine(WatchForGameOver());
+        StartCoroutine(WatchForWaveOver());
         //spiralLaserImage.enabled = false;
     }
 
@@ -109,6 +110,11 @@ public class UIManager : MonoBehaviour
         spiralLaserImage.gameObject.SetActive(false); 
     }
 
+    public void StartNewWave()
+    {
+        StopCoroutine(WatchForWaveOver());
+    }
+
     //
     //  Helper Methods
     //
@@ -129,9 +135,17 @@ public class UIManager : MonoBehaviour
         StartCoroutine(DisplayGameOver2());
     }
 
+    IEnumerator WatchForWaveOver()
+    {
+            while (!gameManager.WaveOver) { yield return null; }
+            StartCoroutine(DisplayWaveOver());
+    }
+
+
     IEnumerator DisplayGameOver2()
     {
         gameOverText.gameObject.SetActive(true);
+        restartText.text = "Press the 'R' key to restart the game";
         while (gameManager.GameOver)
         {
             yield return new WaitForSeconds(gameOverDelay);
@@ -159,17 +173,22 @@ public class UIManager : MonoBehaviour
     // Unused                ============================================================
     //
 
-    IEnumerator DisplayGameOver()
+    IEnumerator DisplayWaveOver()
     {
         bool flash;
+        gameOverText.text = "WAVE OVER";
+        restartText.text  = "Press the 'R' key to restart the level";
         gameOverText.gameObject.SetActive(true);
         restartText.gameObject.SetActive(true);
-        while (gameManager.GameOver)
+        while (gameManager.WaveOver)
         {
             yield return new WaitForSeconds(0.5f);
             flash = gameOverText.gameObject.activeSelf ? false : true;
             gameOverText.gameObject.SetActive(flash);
         }
+        gameOverText.gameObject.SetActive(false);
+        restartText.gameObject.SetActive(false);
+        StartCoroutine(WatchForWaveOver());
     }
 
     IEnumerator DisplayGameOver3()

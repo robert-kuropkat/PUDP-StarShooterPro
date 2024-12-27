@@ -206,6 +206,7 @@ public class Player : MonoBehaviour
     public void EnemyDestroyed()
     {
         playerScore++;
+        gameManager.CurrentEnemyCount--;
         uiManager.NewScore(playerScore);
     }
 

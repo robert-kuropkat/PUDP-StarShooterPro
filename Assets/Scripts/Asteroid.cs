@@ -49,7 +49,11 @@ public class Asteroid : MonoBehaviour
 
     private void MoveMe() { transform.Rotate(0, 0, myRoataionSpeed); }
 
-    private void GameOn() { myGameManager.GameLive = true; }
+    private void GameOn() 
+    { 
+        myGameManager.GameLive    = true;
+        myGameManager.CurrentWave = 1;
+    }
 
     private void DestroyMyself()
     {

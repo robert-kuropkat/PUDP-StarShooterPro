@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     // Properties
     //
 
-    private bool gameOver = false;
+    [SerializeField] private bool gameOver = false;
     public bool GameOver
     {
         get { return gameOver; }
@@ -20,11 +20,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private bool gameLive = false;
+    [SerializeField] private bool gameLive = false;
     public bool GameLive
     {
         get { return gameLive;  }
         set { gameLive = value; }
+    }
+
+    [SerializeField] private bool waveOver = true;
+    public bool WaveOver
+    {
+        get { return waveOver; }
+        set { waveOver = value; }
+    }
+
+    [SerializeField] private int currentWave = 0;
+    public int CurrentWave
+    {
+        get { return currentWave; }
+        set { currentWave = value; }
+    }
+
+    [SerializeField] private int currentEnemyCount = 0;
+    public int CurrentEnemyCount
+    {
+        get { return currentEnemyCount; }
+        set { currentEnemyCount = value; }
     }
 
     //
@@ -33,11 +54,20 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (WaveOver && GameLive) { return; }
+
         if (  Input.GetKeyDown(KeyCode.R)           // Restart game
-           && gameOver ) 
-           {  SceneManager.LoadScene("Game"); }
+           && gameOver )
+           { SceneManager.LoadScene("Game"); }
+        
         if (  Input.GetKeyDown(KeyCode.Escape) )    // Exit game
            {  Application.Quit(); }
+        
+        if (  currentEnemyCount == 0
+           && gameLive )
+             { WaveOver = true; }
+        else { WaveOver = false; }
+
     }
 
 }
