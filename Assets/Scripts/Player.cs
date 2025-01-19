@@ -142,6 +142,9 @@ public class Player : MonoBehaviour
             case "SpiralPU":
                 myWeapons.Laser360Enabled = true;
                 break;
+            case "NegativeAmmoPU":
+                myWeapons.ReduceAmmo();
+                break;
             default:
                 break;
         }

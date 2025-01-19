@@ -17,16 +17,17 @@ public class Enemy : MonoBehaviour
     //        right/left is the right/left of the player, also not center.   (9.5,-9.5)
     //        Maybe need three sets of boundaries.  Screen, object and spawn...
     //
-    [SerializeField] private float      screenBoundary_TB = 6.0f;
-    [SerializeField] private float      screenBoundary_LR = 9.5f;
-    [SerializeField] private float      spawnPoint_T      = 2.0f;
-    [SerializeField] private float      spawnPoint_LR     = 2.0f;
+    [SerializeField] protected float      screenBoundary_TB = 6.0f;
+    [SerializeField] protected float      screenBoundary_LR = 9.5f;
+    [SerializeField] protected float      spawnPoint_T      = 2.0f;
+    [SerializeField] protected float      spawnPoint_LR     = 2.0f;
     //[SerializeField] private float      upperLowerBound = 8.0f;
     //[SerializeField] private float      leftRightBound  = 9.0f;
     //
     // Flags
     //
-    [SerializeField] private bool       imDead          = false;
+    [SerializeField] protected bool       imDead          = false;
+    [SerializeField] private   bool       changeDirection = false;
     //
     // Game Objects populated in code
     //
@@ -61,6 +62,7 @@ public class Enemy : MonoBehaviour
 
         NullCheckOnStartup();
         StartCoroutine(FireLaser());
+        StartCoroutine(ChangeDirection());
     }
 
     private void Update()
@@ -74,6 +76,9 @@ public class Enemy : MonoBehaviour
                 break;
             case "RIGHT":
                 if (transform.position.x < -(screenBoundary_LR + spawnPoint_LR)) { RespawnAtRight(); }
+                break;
+            case "ANGLE":
+                if (transform.position.x > (screenBoundary_LR + spawnPoint_LR)) { RespawnAtLeft(); }
                 break;
             default:
                 if (transform.position.y < -(screenBoundary_TB + spawnPoint_T) ) { RespawnAtTop(); }
@@ -121,11 +126,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    IEnumerator ChangeDirection()
+    {
+        while (true)
+        {
+            changeDirection = changeDirection ? false : true;
+            yield return new WaitForSeconds(1);
+        }
+    }
+
     //
     // Helper Methods            ============================================================
     //
 
-    private void MoveMe() 
+    protected void MoveMe() 
     {
         switch (SpawnSide)
         {
@@ -138,21 +152,25 @@ public class Enemy : MonoBehaviour
             case "TOP":
                 transform.Translate(Vector3.down * Time.deltaTime * mySpeed);
                 break;
+            case "ANGLE":
+                int newDirection = changeDirection ? 1 : -1;
+                transform.Translate(new Vector3(1, -1 * newDirection, 0) * Time.deltaTime * mySpeed, Space.Self);
+                break;
             default:
                 transform.Translate(Vector3.down * Time.deltaTime * mySpeed);
                 break;
         }
     }
 
-    private void RespawnAtTop()
+    protected void RespawnAtTop()
         { transform.position = new Vector3(Random.Range(-(screenBoundary_LR), screenBoundary_LR), (screenBoundary_TB + spawnPoint_T), 0); }
-
+    /*
     private void RespawnAtLeft()
     { transform.position = new Vector3(-(screenBoundary_LR + spawnPoint_LR), Random.Range(-(screenBoundary_TB - spawnPoint_T), screenBoundary_TB), 0); }
 
     private void RespawnAtRight()
     { transform.position = new Vector3( (screenBoundary_LR + spawnPoint_LR), Random.Range(-(screenBoundary_TB - spawnPoint_T), screenBoundary_TB), 0); }
-
+    */
     private void EnemyDeathScene()
     {
         imDead = true; // Flag to short circuit respawning in Update()

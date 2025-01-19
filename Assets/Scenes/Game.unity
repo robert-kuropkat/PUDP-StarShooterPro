@@ -440,6 +440,7 @@ MonoBehaviour:
   fireRate: 0.15
   tripleShotTimer: 5
   ammoCollectible: 15
+  negativeAmmoCollectible: 7
   ammoStartCount: 26
   laserOffest: {x: 0, y: 1.006, z: 0}
   laserCanFire: 1
@@ -717,7 +718,7 @@ MonoBehaviour:
   spawnPowerUpTimeHigh: 10
   screenLimitLeftRight: 11
   screenLimitTopBottom: 8
-  enemyPrefab: {fileID: 7146149911813876704, guid: af46d1423d61c8245b2f1163d131450b,
+  enemyPrefab: {fileID: 2725393502940477956, guid: 8af5acf78e723844e80c7dd104956e4e,
     type: 3}
   enemyContainer: {fileID: 1879174202}
   powerUpContainer: {fileID: 1379045096}
@@ -728,6 +729,7 @@ MonoBehaviour:
   - {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6, type: 3}
   - {fileID: 1016275360781342716, guid: eefe0b37469264744a3762ca0d6d2324, type: 3}
   - {fileID: 314213025121937127, guid: d043dccff31415449a882ead539b33ff, type: 3}
+  - {fileID: 2588135242098431631, guid: 9c8f30d1d6b81274c875948ae8185d8e, type: 3}
   gameManager: {fileID: 1366714290}
 --- !u!4 &606388764
 Transform:

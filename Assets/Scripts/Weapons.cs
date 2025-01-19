@@ -7,11 +7,12 @@ public class Weapons : MonoBehaviour
     //
     // Speed, Boundaries and Timers
     //
-    [SerializeField] private float   fireRate        = .15f;
-    [SerializeField] private float   tripleShotTimer = 5f;
-    [SerializeField] private int     ammoCollectible = 15;
-    [SerializeField] private int     ammoStartCount  = 26;
-    [SerializeField] private Vector3 laserOffest     = new Vector3(0, 1.006f, 0);
+    [SerializeField] private float   fireRate                = .15f;
+    [SerializeField] private float   tripleShotTimer         = 5f;
+    [SerializeField] private int     ammoCollectible         = 15;
+    [SerializeField] private int     negativeAmmoCollectible = 7;
+    [SerializeField] private int     ammoStartCount          = 26;
+    [SerializeField] private Vector3 laserOffest             = new Vector3(0, 1.006f, 0);
     //
     // Flags
     //
@@ -136,6 +137,8 @@ public class Weapons : MonoBehaviour
     }
 
     public void CollectAmmo() { AmmoCount = AmmoCount + ammoCollectible; }
+
+    public void ReduceAmmo()  { AmmoCount = AmmoCount - negativeAmmoCollectible; }
 
     //
     // Watchdogs            ============================================================

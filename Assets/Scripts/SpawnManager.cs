@@ -27,17 +27,19 @@ public class SpawnManager : MonoBehaviour
     private int ChoosePowerUpIndex
         { get 
             { 
-                int selectIndex = Random.Range(1,51);
+                int selectIndex = Random.Range(1,56);
+            Debug.Log("Select Index Range: " + selectIndex);
             //
             // Note: This is dependendent on the order these power ups are placed 
             //       in the array in the inspector which is wonky.
             //
-            if      (selectIndex > 0  && selectIndex < 10) { return 0; }  // Triple Shot approx: 19%
-            else if (selectIndex > 9  && selectIndex < 20) { return 1; }  // Speed       approx: 19%
-            else if (selectIndex > 19 && selectIndex < 30) { return 2; }  // Shield      approx: 19%
-            else if (selectIndex > 29 && selectIndex < 40) { return 3; }  // Ammo        approx: 19%
-            else if (selectIndex > 39 && selectIndex < 50) { return 4; }  // Health      approx: 19%
-            else if (selectIndex > 49 && selectIndex < 52) { return 5; }  // Spiral      approx: 4%
+            if      (selectIndex > 0  && selectIndex < 10) { return 0; }  // Triple Shot   approx: 17%
+            else if (selectIndex > 9  && selectIndex < 20) { return 1; }  // Speed         approx: 17%
+            else if (selectIndex > 19 && selectIndex < 30) { return 2; }  // Shield        approx: 17%
+            else if (selectIndex > 29 && selectIndex < 40) { return 3; }  // Ammo          approx: 17%
+            else if (selectIndex > 39 && selectIndex < 50) { return 4; }  // Health        approx: 17%
+            else if (selectIndex > 49 && selectIndex < 55) { return 6; }  // Negative Ammo approx: 09%
+            else if (selectIndex > 54 && selectIndex < 57) { return 5; }  // Spiral        approx: 05%
             return 0;
             } 
         }
@@ -200,7 +202,7 @@ public class SpawnManager : MonoBehaviour
                                                       , Random.Range( -screenLimitTopBottom
                                                                     ,  screenLimitTopBottom), 0)
                                          , Quaternion.identity);
-        newEnemy.transform.GetComponent<Enemy>().SpawnSide = "LEFT";
+        newEnemy.transform.GetComponent<Enemy>().SpawnSide = "ANGLE";
         if (newEnemy != null) { newEnemy.transform.parent = enemyContainer.transform; }
     }
 

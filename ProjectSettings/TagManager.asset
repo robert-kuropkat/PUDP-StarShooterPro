@@ -15,6 +15,7 @@ TagManager:
   - HealthPU
   - SpiralPU
   - Shield
+  - NegativeAmmoPU
   layers:
   - Default
   - TransparentFX
