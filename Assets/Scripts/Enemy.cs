@@ -69,6 +69,7 @@ public class Enemy : MonoBehaviour
     {
         MoveMe();
         if (imDead) { return; }           // ensure an exploding enemy does not respawn at the top
+        /*
         switch (SpawnSide)
         {
             case "LEFT":
@@ -84,6 +85,7 @@ public class Enemy : MonoBehaviour
                 if (transform.position.y < -(screenBoundary_TB + spawnPoint_T) ) { RespawnAtTop(); }
                 break;
         }
+        */
     }
 
     private void OnTriggerEnter2D(Collider2D other)
