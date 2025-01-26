@@ -2,90 +2,75 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
     //
-    // Speed, Timers and Boundaries
+    // Template
     //
-    [SerializeField] private float      mySpeed         = 4.0f;
-    [SerializeField] private float      laserLowerTimer = 2.0f;
-    [SerializeField] private float      laserUpperTimer = 5.0f;
-    [SerializeField] private float      explosionTimer  = 2.4f;
+    abstract protected float   MySpeed { get; }
+    abstract protected Vector3 SpawnPosition { get; }
+    abstract protected void    MoveMe();
+    abstract protected void    Update();
+
     //
-    // need to separate screen boundaries from spawn boundaries
-    // Note:  Upper point is based on the nose of the player, not center.    (-4,6)
-    //        right/left is the right/left of the player, also not center.   (9.5,-9.5)
-    //        Maybe need three sets of boundaries.  Screen, object and spawn...
+    // Timers
     //
-    [SerializeField] protected float      screenBoundary_TB = 6.0f;
-    [SerializeField] protected float      screenBoundary_LR = 9.5f;
-    [SerializeField] protected float      spawnPoint_T      = 2.0f;
-    [SerializeField] protected float      spawnPoint_LR     = 2.0f;
-    //[SerializeField] private float      upperLowerBound = 8.0f;
-    //[SerializeField] private float      leftRightBound  = 9.0f;
+    [SerializeField] private float laserLowerTimer = 2.0f;
+    [SerializeField] private float laserUpperTimer = 5.0f;
+    [SerializeField] private float explosionTimer  = 2.4f;
+
     //
-    // Flags
+    // Game Objects non-Serialized objects are populated in code
     //
-    [SerializeField] protected bool       imDead          = false;
-    [SerializeField] private   bool       changeDirection = false;
-    //
-    // Game Objects populated in code
-    //
-    [SerializeField] private Player     myPlayer;
     [SerializeField] private GameObject laserPrefab;
+                     private Player     myPlayer;
                      private Animator   myExplosion_anim;
 
     //
     // Properties
     //
-    [SerializeField] private string     spawnSide;
-    public string SpawnSide
-    {
-        get { return spawnSide;  }
-        set { spawnSide = value.ToUpper(); }
-    }
+    protected bool ImDead { get; set; } = false;
 
     //
-    // Game Control              ============================================================
+    // Note:  Upper point is based on the nose of the player, not center.    (-4,6)
+    //        right/left is the right/left of the player, also not center.   (9.5,-9.5)
+    //        Maybe need three sets of boundaries.  Screen, object and spawn...
+    //
+    //  May need to give all four values, especially for the spawn boundaries
+    //
+
+    [System.Serializable]
+    protected struct Boundary
+    {
+        [SerializeField] private float _x, _y;
+        public Boundary(float x, float y) { _x = x; _y = y; }
+        public float X { get { return _x; } }
+        public float Y { get { return _y; } }
+    }
+    [SerializeField] protected Boundary ScreenBoundary          = new Boundary( 9.5f, 6.0f);
+    [SerializeField] protected Boundary HorizontalSpawnBoundary = new Boundary(11.5f, 5.0f);
+    [SerializeField] protected Boundary VerticalSpawnBoundary   = new Boundary( 8.5f, 8.0f);
+
+    //
+    // Game Loop              ============================================================
     //
     private void NullCheckOnStartup()
     {
+        //
+        //  ToDo: Make sure we are checking everything we should here...
+        //
         if (myPlayer         == null) { Debug.LogError("The Player is NULL."); }
         if (laserPrefab      == null) { Debug.LogError("The Enemy Laser Prefab is NULL."); }
         if (myExplosion_anim == null) { Debug.LogError("The Explosion Animator is NULL."); }
     }
 
-    private void Start() 
+    protected virtual void Start() 
     { 
         myPlayer         = GameObject.Find("Player").GetComponent<Player>();
         myExplosion_anim = GetComponent<Animator>();
 
         NullCheckOnStartup();
         StartCoroutine(FireLaser());
-        StartCoroutine(ChangeDirection());
-    }
-
-    private void Update()
-    {
-        MoveMe();
-        if (imDead) { return; }           // ensure an exploding enemy does not respawn at the top
-        /*
-        switch (SpawnSide)
-        {
-            case "LEFT":
-                if (transform.position.x >  (screenBoundary_LR + spawnPoint_LR)) { RespawnAtLeft(); }
-                break;
-            case "RIGHT":
-                if (transform.position.x < -(screenBoundary_LR + spawnPoint_LR)) { RespawnAtRight(); }
-                break;
-            case "ANGLE":
-                if (transform.position.x > (screenBoundary_LR + spawnPoint_LR)) { RespawnAtLeft(); }
-                break;
-            default:
-                if (transform.position.y < -(screenBoundary_TB + spawnPoint_T) ) { RespawnAtTop(); }
-                break;
-        }
-        */
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -109,7 +94,7 @@ public class Enemy : MonoBehaviour
         // animation.
         //
         yield return new WaitForSeconds(Random.Range(laserLowerTimer, laserUpperTimer));
-        while (!imDead)
+        while (!ImDead)
         {
             //
             // If enemy is below the player, in particular off screen, then don't bother firing.
@@ -123,17 +108,7 @@ public class Enemy : MonoBehaviour
                            , transform.position
                            , Quaternion.identity);
             }
-            // Debug.Break();
             yield return new WaitForSeconds(Random.Range(laserLowerTimer, laserUpperTimer));
-        }
-    }
-
-    IEnumerator ChangeDirection()
-    {
-        while (true)
-        {
-            changeDirection = changeDirection ? false : true;
-            yield return new WaitForSeconds(1);
         }
     }
 
@@ -141,41 +116,9 @@ public class Enemy : MonoBehaviour
     // Helper Methods            ============================================================
     //
 
-    protected void MoveMe() 
-    {
-        switch (SpawnSide)
-        {
-            case "LEFT":
-                transform.Translate(Vector3.right * Time.deltaTime * mySpeed);
-                break;
-            case "RIGHT":
-                transform.Translate(Vector3.left * Time.deltaTime * mySpeed);
-                break;
-            case "TOP":
-                transform.Translate(Vector3.down * Time.deltaTime * mySpeed);
-                break;
-            case "ANGLE":
-                int newDirection = changeDirection ? 1 : -1;
-                transform.Translate(new Vector3(1, -1 * newDirection, 0) * Time.deltaTime * mySpeed, Space.Self);
-                break;
-            default:
-                transform.Translate(Vector3.down * Time.deltaTime * mySpeed);
-                break;
-        }
-    }
-
-    protected void RespawnAtTop()
-        { transform.position = new Vector3(Random.Range(-(screenBoundary_LR), screenBoundary_LR), (screenBoundary_TB + spawnPoint_T), 0); }
-    /*
-    private void RespawnAtLeft()
-    { transform.position = new Vector3(-(screenBoundary_LR + spawnPoint_LR), Random.Range(-(screenBoundary_TB - spawnPoint_T), screenBoundary_TB), 0); }
-
-    private void RespawnAtRight()
-    { transform.position = new Vector3( (screenBoundary_LR + spawnPoint_LR), Random.Range(-(screenBoundary_TB - spawnPoint_T), screenBoundary_TB), 0); }
-    */
     private void EnemyDeathScene()
     {
-        imDead = true; // Flag to short circuit respawning in Update()
+        ImDead = true; // Flag to short circuit respawning in Update()
         DisableCollisionComponenets();
         TriggerExplosion();
         NotifyPlayer();
@@ -192,10 +135,8 @@ public class Enemy : MonoBehaviour
                            else { myAudio.Play(); }
     }
 
-    private void TriggerExplosion()
-        { myExplosion_anim.SetTrigger("OnEnemyDeath"); }
+    private void TriggerExplosion() { myExplosion_anim.SetTrigger("OnEnemyDeath"); }
 
-    private void NotifyPlayer()
-        { myPlayer.EnemyDestroyed(); }
+    private void NotifyPlayer()     { myPlayer.EnemyDestroyed(); }
 
 }

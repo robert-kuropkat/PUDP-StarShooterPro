@@ -4,11 +4,41 @@ using UnityEngine;
 
 public class EnemyVertical : Enemy
 {
-    private void Update()
+    //
+    // Properties
+    //
+    [SerializeField] protected float mySpeed = 4.0f;
+    protected override float   MySpeed { get { return mySpeed; } }
+    protected override Vector3 SpawnPosition
+    {
+        get {
+            return new Vector3( Random.Range( -(VerticalSpawnBoundary.X)
+                                            ,  (VerticalSpawnBoundary.X))
+                              , VerticalSpawnBoundary.Y, 0);
+        }
+    }
+
+    //
+    // Game Loop
+    //
+    protected override void Start()
+    {
+        base.Start();
+        transform.position = SpawnPosition;
+        transform.rotation = Quaternion.identity;
+    }
+
+    protected override void Update()
     {
         MoveMe();
-        if (imDead) { return; }           // ensure an exploding enemy does not respawn at the top
-        if (transform.position.y < -(screenBoundary_TB + spawnPoint_T)) { RespawnAtTop(); }
+        if (ImDead) { return; }           // ensure an exploding enemy does not respawn at the top
+        if (transform.position.y < -VerticalSpawnBoundary.Y) { Teleport(); }
     }
+
+    protected override void MoveMe()
+    { transform.Translate(Vector3.down * Time.deltaTime * mySpeed); }
+
+    protected void Teleport()
+    { transform.position = SpawnPosition; }
 
 }

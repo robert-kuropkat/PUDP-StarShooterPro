@@ -28,7 +28,7 @@ public class SpawnManager : MonoBehaviour
         { get 
             { 
                 int selectIndex = Random.Range(1,56);
-            Debug.Log("Select Index Range: " + selectIndex);
+            //Debug.Log("Select Index Range: " + selectIndex);
             //
             // Note: This is dependendent on the order these power ups are placed 
             //       in the array in the inspector which is wonky.
@@ -202,17 +202,13 @@ public class SpawnManager : MonoBehaviour
                                                       , Random.Range( -screenLimitTopBottom
                                                                     ,  screenLimitTopBottom), 0)
                                          , Quaternion.identity);
-        newEnemy.transform.GetComponent<Enemy>().SpawnSide = "ANGLE";
+        //newEnemy.transform.GetComponent<Enemy>().SpawnSide = "RIGHT";
         if (newEnemy != null) { newEnemy.transform.parent = enemyContainer.transform; }
     }
 
     private void SpawnEnemy()
     {
-        GameObject newEnemy = Instantiate( enemyPrefab
-                                         , new Vector3(Random.Range(-screenLimitLeftRight
-                                                                   , screenLimitLeftRight)
-                                                                   , screenLimitTopBottom, 0)
-                                         , Quaternion.identity);
+        GameObject newEnemy = Instantiate(enemyPrefab);
         if (newEnemy != null) { newEnemy.transform.parent = enemyContainer.transform; }
     }
 

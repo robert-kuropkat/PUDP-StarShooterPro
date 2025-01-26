@@ -4,28 +4,42 @@ using UnityEngine;
 
 public class EnemyHorizontal : Enemy
 {
-    private void Update()
+    //
+    // Properties
+    //
+    [SerializeField] protected float mySpeed = 4.0f;
+    protected override float   MySpeed { get { return mySpeed; } }
+    protected override Vector3 SpawnPosition
     {
-        MoveMe();
-        if (imDead) { return; }           // ensure an exploding enemy does not respawn at the top
-        switch (SpawnSide)
+        get
         {
-            case "LEFT":
-                if (transform.position.x > (screenBoundary_LR + spawnPoint_LR)) { RespawnAtLeft(); }
-                break;
-            case "RIGHT":
-                if (transform.position.x < -(screenBoundary_LR + spawnPoint_LR)) { RespawnAtRight(); }
-                break;
-            default:
-                if (transform.position.x < -(screenBoundary_LR + spawnPoint_LR)) { RespawnAtRight(); }
-                break;
+            return new Vector3( -(HorizontalSpawnBoundary.X)
+                              ,   Random.Range( -(HorizontalSpawnBoundary.Y)
+                                              ,  (HorizontalSpawnBoundary.Y)), 0);
         }
     }
 
-    private void RespawnAtLeft()
-    { transform.position = new Vector3(-(screenBoundary_LR + spawnPoint_LR), Random.Range(-(screenBoundary_TB - spawnPoint_T), screenBoundary_TB), 0); }
+    //
+    // Game Loop
+    //
+    protected override void Start()
+    {
+        base.Start();
+        transform.position = SpawnPosition;
+        transform.rotation = Quaternion.identity;
+    }
 
-    private void RespawnAtRight()
-    { transform.position = new Vector3((screenBoundary_LR + spawnPoint_LR), Random.Range(-(screenBoundary_TB - spawnPoint_T), screenBoundary_TB), 0); }
+    protected override void Update()
+    {
+        MoveMe();
+        if (ImDead) { return; }           // ensure an exploding enemy does not respawn
+        if (transform.position.x > (HorizontalSpawnBoundary.X)) { Teleport(); }
+    }
+
+    protected override void MoveMe()
+    { transform.Translate(Vector3.right * Time.deltaTime * mySpeed); }
+
+    private void Teleport()
+    { transform.position = SpawnPosition; }
 
 }
