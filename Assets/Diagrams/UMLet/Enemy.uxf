@@ -4,23 +4,70 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>500</x>
-      <y>140</y>
-      <w>210</w>
-      <h>190</h>
+      <x>290</x>
+      <y>40</y>
+      <w>340</w>
+      <h>490</h>
     </coordinates>
-    <panel_attributes>/Enemy/
-{Some Properties}
+    <panel_attributes>**/Enemy/**
 --
-/# MySpeed : float/
-/# SpawnPosition : Vector3/
+**private:**
+   laserLowerTimer : float = 2.0f
+   laserUpperTimer : float = 5.0f
+   explosionTimer : float = 2.4f
+   laserPrefab : GameObject
+   myPlayer : Player
+   myExplosion_anim : Animator
+**protected:**
+/  MySpeed : float/
+/  SpawnPosition : Vector3/
+  ImDead : bool = false
+  ScreenBoundary : Boundary (9.5f, 6.0f)
+  HorizontalSpawnBoundary : Boundary (11.5f, 5.0f)
+  VerticalSpawnBoundary : Boundary (8.5f, 8.0f)  
 --
-/# MoveMe() : void/
-/# Update() : void/
+**private:**
+   NullCheckOnStartup() : void
+   Start()
+   OnTriggerEnter(other Collider2d) 
+   FireLaser() : IEnumerator
+   EnemyDeathScene() : void
+   DisableCollisionComponenets() : void
+   TriggerExplosion() : void
+   NotifyPlayer() : void
+**proected:**
+/  MoveMe() : void/
+/  Update() : void/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>290</x>
+      <y>570</y>
+      <w>240</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;dataType&gt;&gt;
+Boundary
 --
-Responsibilities
--- Resp1
-*-- Resp2*</panel_attributes>
+public:
+   X : float
+   Y : float
+--
+&lt;&lt;create&gt;&gt; Bounary (_x: float, _y float)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>790</x>
+      <y>70</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>EnemyVertical</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
