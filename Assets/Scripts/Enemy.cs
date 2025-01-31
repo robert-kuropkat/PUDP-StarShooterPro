@@ -104,7 +104,7 @@ public abstract class Enemy : MonoBehaviour
             if (  myPlayer != null 
                && transform.position.y > myPlayer.transform.position.y)
             {
-                Instantiate(laserPrefab
+                Instantiate( laserPrefab
                            , transform.position
                            , Quaternion.identity);
             }

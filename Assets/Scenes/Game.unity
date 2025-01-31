@@ -718,8 +718,6 @@ MonoBehaviour:
   spawnPowerUpTimeHigh: 10
   screenLimitLeftRight: 11
   screenLimitTopBottom: 8
-  enemyPrefab: {fileID: 2725393502940477956, guid: 8af5acf78e723844e80c7dd104956e4e,
-    type: 3}
   enemyContainer: {fileID: 1879174202}
   powerUpContainer: {fileID: 1379045096}
   powerUpPrefabs:
@@ -731,6 +729,28 @@ MonoBehaviour:
   - {fileID: 314213025121937127, guid: d043dccff31415449a882ead539b33ff, type: 3}
   - {fileID: 2588135242098431631, guid: 9c8f30d1d6b81274c875948ae8185d8e, type: 3}
   gameManager: {fileID: 1366714290}
+  spawnableObjects:
+  - _prefab: {fileID: 2725393502940477956, guid: 8af5acf78e723844e80c7dd104956e4e,
+      type: 3}
+    _weight: 5
+    _name: Vertical
+    _type: Enemy
+  - _prefab: {fileID: 3052947059026481892, guid: 29f083c3890ed694da5545f107f911b8,
+      type: 3}
+    _weight: 3
+    _name: Horizontal
+    _type: Enemy
+  - _prefab: {fileID: 480282562876842775, guid: d6e7563553766924fab1ac1f41684f66,
+      type: 3}
+    _weight: 2
+    _name: Horizontal ZigZag
+    _type: Enemy
+  - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
+      type: 3}
+    _weight: 10
+    _name: Ammo
+    _type: PowerUp
+  spawnWeight: 
 --- !u!4 &606388764
 Transform:
   m_ObjectHideFlags: 0

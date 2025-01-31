@@ -15,6 +15,34 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private AudioClip myAudioClip;
 
     //
+    // Properties
+    //
+
+    [System.Serializable]
+    protected struct Boundary
+    {
+        [SerializeField] private float _x, _y;
+        public Boundary(float x, float y) { _x = x; _y = y; }
+        public float X { get { return _x; } }
+        public float Y { get { return _y; } }
+    }
+    [SerializeField] protected Boundary ScreenBoundary = new Boundary(9.5f, 6.0f);
+    //[SerializeField] protected Boundary HorizontalSpawnBoundary = new Boundary(11.5f, 5.0f);
+    [SerializeField] protected Boundary VerticalSpawnBoundary = new Boundary(8.5f, 8.0f);
+
+    protected Vector3 SpawnPosition
+    {
+        get
+        {
+            return new Vector3(Random.Range( -(VerticalSpawnBoundary.X)
+                                            , (VerticalSpawnBoundary.X))
+                              , VerticalSpawnBoundary.Y, 0);
+        }
+    }
+
+
+
+    //
     // Game Control             ============================================================
     //
 
@@ -26,6 +54,8 @@ public class PowerUp : MonoBehaviour
     private void Start()                            
     {
         NullCheckOnStartup();
+        transform.position = SpawnPosition;
+        transform.rotation = Quaternion.identity;
         Destroy(this.gameObject, myTimeOut); 
     }
 

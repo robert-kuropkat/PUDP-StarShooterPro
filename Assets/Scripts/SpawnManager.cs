@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -16,11 +17,57 @@ public class SpawnManager : MonoBehaviour
     //
     // Game Objects populated in Inspector
     //
-    [SerializeField] private GameObject   enemyPrefab;
     [SerializeField] private GameObject   enemyContainer;
     [SerializeField] private GameObject   powerUpContainer;
     [SerializeField] private GameObject[] powerUpPrefabs;
     [SerializeField] private GameManager  gameManager;
+    [SerializeField] private Spawnable[]  spawnableObjects;
+    [SerializeField] private int[]        spawnWeight;
+
+    //
+    // Data Structures
+    //
+    //
+    //  Add wave controls to this.  eg:
+    //    _count
+    //    _spawnRateLow/High
+    //    _movementSpeed ?
+    [System.Serializable]
+    private struct Spawnable
+    {
+        public GameObject _prefab;
+        public int        _weight, _waveCount;
+        public string     _name, _type;
+        public float      _movementSpeed;
+//        public float      _spawnRateLow, _spawnRateHigh, _movementSpeed;
+        public Spawnable( GameObject prefab
+                        , int        weight
+                        , string     name
+                        , string     type
+                        , int        waveCount
+ //                       , float      spawnRateLow
+ //                       , float      spawnRateHigh
+                        , float      movementSpeed
+                        )
+        {
+            _prefab        = prefab;
+            _weight        = weight;
+            _name          = name;
+            _type          = type;
+            _waveCount     = waveCount;
+ //           _spawnRateLow  = spawnRateLow;
+ //           _spawnRateHigh = spawnRateHigh;
+            _movementSpeed = movementSpeed;
+        }
+        public GameObject Prefab        { get { return _prefab;        } set { _prefab        = value; } }
+        public string     Name          { get { return _name;          } set { _name          = value; } }
+        public string     Type          { get { return _type;          } set { _type          = value; } }
+//        public float      SpawnRateLow  { get { return _spawnRateLow;  } set { _spawnRateLow  = value; } }
+//        public float      SpawnRateHigh { get { return _spawnRateHigh; } set { _spawnRateHigh = value; } }
+        public float      MovementSpeed { get { return _movementSpeed; } set { _movementSpeed = value; } }
+        public int        Weight        { get { return _weight;        } set { _weight        = value; } }
+        public int        WaveCount     { get { return _waveCount;     } set { _waveCount     = value; } }
+    }
     //
     // Properties
     //
@@ -51,18 +98,18 @@ public class SpawnManager : MonoBehaviour
     private void NullCheckOnStartup()
     {
         //ToDo:  Add actual error handling rather than just a debug message.
-        if (enemyPrefab           == null) { Debug.LogError("Enemy Prefab is NULL"); }
+        //if (enemyPrefab           == null) { Debug.LogError("Enemy Prefab is NULL"); }
         if (enemyContainer        == null) { Debug.LogError("Enemy Container is NULL"); }
         if (powerUpContainer      == null) { Debug.LogError("PowerUp Container is NULL"); }
         if (gameManager           == null) { Debug.LogError("Game Manager is NULL"); }
         // this does not work if the array size is declared but one or more of the elements is not set.
-        if (powerUpPrefabs.Length == 0) { Debug.LogError("PowerUp prefabs is EMPTY"); }
+        if (powerUpPrefabs.Length   == 0)  { Debug.LogError("PowerUp prefabs is EMPTY"); }
+        if (spawnableObjects.Length == 0)  { Debug.LogError("Spawnable Objects is EMPTY"); }
     }
 
     private void Start() 
     {
         NullCheckOnStartup();
-        //SpawnNewWave();
         StartCoroutine(WaitforGameStart());
     }
 
@@ -83,6 +130,7 @@ public class SpawnManager : MonoBehaviour
         switch (gameManager.CurrentWave)
         {
             case 1:
+                SetSpawnWeight();
                 SpawnWave01();
                 break;
             case 2:
@@ -104,29 +152,21 @@ public class SpawnManager : MonoBehaviour
     private void SpawnWave01()
     {
         StartCoroutine(SpawnEnemyRoutine(5, spawnEnemyTimeLow, spawnEnemyTimeHigh));
-        //StartCoroutine(SpawnSideEnemyRoutine(2, spawnEnemyTimeLow, spawnEnemyTimeHigh));
-        StartCoroutine(SpawnPowerUpRoutine());
     }
 
     private void SpawnWave02()
     {
         StartCoroutine(SpawnEnemyRoutine(30, spawnEnemyTimeLow, spawnEnemyTimeHigh));
-        //StartCoroutine(SpawnSideEnemyRoutine());
-        StartCoroutine(SpawnPowerUpRoutine());
     }
 
     private void SpawnWave03()
     {
         StartCoroutine(SpawnEnemyRoutine(30, spawnEnemyTimeLow, spawnEnemyTimeHigh));
-        //StartCoroutine(SpawnSideEnemyRoutine());
-        StartCoroutine(SpawnPowerUpRoutine());
     }
 
     private void SpawnWave04()
     {
         StartCoroutine(SpawnEnemyRoutine(30, spawnEnemyTimeLow, spawnEnemyTimeHigh));
-        //StartCoroutine(SpawnSideEnemyRoutine());
-        StartCoroutine(SpawnPowerUpRoutine());
     }
 
     //
@@ -148,78 +188,42 @@ public class SpawnManager : MonoBehaviour
         SpawnNewWave();
     }
 
-    private IEnumerator SpawnSideEnemyRoutine(int enemyCount, float spawnSpeedLow, float spawnSpeedHigh)
-    {
-        gameManager.CurrentEnemyCount += enemyCount;
-        while (true)
-        {
-            while (enemyCount > 0 && gameManager.GameLive)
-            {
-                SpawnSideEnemy();
-                enemyCount--;
-                yield return new WaitForSeconds(Random.Range( spawnSpeedLow
-                                                            , spawnSpeedHigh));
-            }
-            yield return null;
-        }
-    }
+    //
+    // Need to refactor enemy count if spawning powerups also
+    //  If max enemy, no longer spawn enemy  Maybe rebuild SpawnWeight
+    //
     private IEnumerator SpawnEnemyRoutine(int enemyCount, float spawnSpeedLow, float spawnSpeedHigh)
     {
         gameManager.CurrentEnemyCount += enemyCount;
         while (enemyCount > 0 && gameManager.GameLive) 
         {
-            SpawnEnemy();
-            enemyCount--;
-            //Debug.Log("Enemy Count: " + enemyCount);
+//            SpawnEnemy();
+            var index = spawnWeight[Random.Range(0, spawnWeight.Length - 1)];
+            GameObject newSpawnable = Instantiate(spawnableObjects[index].Prefab);
+            
+            if (newSpawnable != null && spawnableObjects[index].Type.ToUpper() == "ENEMY") 
+            { 
+                newSpawnable.transform.parent = enemyContainer.transform;
+                enemyCount--;
+            } else if (newSpawnable != null && spawnableObjects[index].Type.ToUpper() == "POWERUP") 
+            {
+                newSpawnable.transform.parent = powerUpContainer.transform;
+            }
+
             yield return new WaitForSeconds(Random.Range( spawnSpeedLow
                                                         , spawnSpeedHigh));
         }
-        //Debug.Log("Closing Spawn Enemy Routine");
     }
-
-    private IEnumerator SpawnPowerUpRoutine()
+    private void SetSpawnWeight()
     {
-        while (true)
+        int i = 0;
+        spawnWeight = Enumerable.Repeat<int>(0, 0).ToArray();
+        foreach (Spawnable spawnableObject in spawnableObjects)
         {
-            while (gameManager.GameLive)
-            {
-                ChoosePowerUp();
-                yield return new WaitForSeconds(Random.Range( spawnPowerUpTimeLow
-                                                            , spawnPowerUpTimeHigh));
-            }
-            yield return null;
+            spawnWeight = spawnWeight.Concat(Enumerable.Repeat<int>(i, spawnableObject.Weight).ToArray()).ToArray();
+            i++;
         }
     }
 
-    //
-    // Helper Methods            ============================================================
-    //
-
-    private void SpawnSideEnemy()
-    {
-        GameObject newEnemy = Instantiate(enemyPrefab
-                                         , new Vector3( -(screenLimitLeftRight + 2)
-                                                      , Random.Range( -screenLimitTopBottom
-                                                                    ,  screenLimitTopBottom), 0)
-                                         , Quaternion.identity);
-        //newEnemy.transform.GetComponent<Enemy>().SpawnSide = "RIGHT";
-        if (newEnemy != null) { newEnemy.transform.parent = enemyContainer.transform; }
-    }
-
-    private void SpawnEnemy()
-    {
-        GameObject newEnemy = Instantiate(enemyPrefab);
-        if (newEnemy != null) { newEnemy.transform.parent = enemyContainer.transform; }
-    }
-
-    private void ChoosePowerUp()
-    {
-        GameObject powerUp = Instantiate( powerUpPrefabs[ChoosePowerUpIndex]
-                                        , new Vector3(Random.Range(-screenLimitLeftRight
-                                                                  , screenLimitLeftRight)
-                                                                  , screenLimitTopBottom, 0)
-                                        , Quaternion.identity);
-        if (powerUp != null) { powerUp.transform.parent = powerUpContainer.transform; }
-    }
 
 }
