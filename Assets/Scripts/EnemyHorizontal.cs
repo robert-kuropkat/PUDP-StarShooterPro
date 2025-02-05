@@ -5,19 +5,18 @@ using UnityEngine;
 public class EnemyHorizontal : Enemy
 {
     //
+    // Deferred
+    //
+    protected override Vector3 SpawnPosition { get; }
+    protected override void MoveMe() { }
+    protected override void Update() { }
+
+    //
     // Properties
     //
+
     [SerializeField] protected float mySpeed = 4.0f;
-    protected override float   MySpeed { get { return mySpeed; } }
-    protected override Vector3 SpawnPosition
-    {
-        get
-        {
-            return new Vector3( -(HorizontalSpawnBoundary.X)
-                              ,   Random.Range( -(HorizontalSpawnBoundary.Y)
-                                              ,  (HorizontalSpawnBoundary.Y)), 0);
-        }
-    }
+    public override float MySpeed { get { return mySpeed; } set { mySpeed = value; } }
 
     //
     // Game Loop
@@ -29,17 +28,10 @@ public class EnemyHorizontal : Enemy
         transform.rotation = Quaternion.identity;
     }
 
-    protected override void Update()
-    {
-        MoveMe();
-        if (ImDead) { return; }           // ensure an exploding enemy does not respawn
-        if (transform.position.x > (HorizontalSpawnBoundary.X)) { Teleport(); }
-    }
-
-    protected override void MoveMe()
-    { transform.Translate(Vector3.right * Time.deltaTime * mySpeed); }
-
-    private void Teleport()
+    //
+    // Game Object Control Methods
+    //
+    protected void Teleport()
     { transform.position = SpawnPosition; }
 
 }

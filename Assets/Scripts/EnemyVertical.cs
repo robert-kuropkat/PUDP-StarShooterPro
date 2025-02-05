@@ -8,7 +8,7 @@ public class EnemyVertical : Enemy
     // Properties
     //
     [SerializeField] protected float mySpeed = 4.0f;
-    protected override float   MySpeed { get { return mySpeed; } }
+    public override float MySpeed { get { return mySpeed; } set { mySpeed = value; } }
     protected override Vector3 SpawnPosition
     {
         get {

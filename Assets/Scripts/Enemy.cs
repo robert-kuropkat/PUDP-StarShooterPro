@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, ISpawnable
 {
     //
     // Template
     //
-    abstract protected float   MySpeed { get; }
+    abstract public    float   MySpeed { get; set; }
     abstract protected Vector3 SpawnPosition { get; }
     abstract protected void    MoveMe();
     abstract protected void    Update();

@@ -52,7 +52,7 @@ public class Asteroid : MonoBehaviour
     private void GameOn() 
     { 
         myGameManager.GameLive    = true;
-        myGameManager.CurrentWave = 1;
+        //myGameManager.CurrentWave = 1;
     }
 
     private void DestroyMyself()

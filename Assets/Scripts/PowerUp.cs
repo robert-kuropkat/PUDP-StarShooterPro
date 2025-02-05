@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerUp : MonoBehaviour
+public class PowerUp : MonoBehaviour, ISpawnable
 {
     //
     // Speed and Timers
     //
-    [SerializeField] private float     mySpeed   = 3f;
     [SerializeField] private float     myTimeOut = 5f;
     //
     // Game Objects populated in Inspector
@@ -17,6 +16,8 @@ public class PowerUp : MonoBehaviour
     //
     // Properties
     //
+    [SerializeField] private float mySpeed = 3f;
+    public float MySpeed { get { return mySpeed; } set { mySpeed = value; } }
 
     [System.Serializable]
     protected struct Boundary
