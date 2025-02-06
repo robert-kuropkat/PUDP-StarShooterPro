@@ -40,6 +40,9 @@ public class Laser : MonoBehaviour
     // Helper Methods           ============================================================
     //
 
+    //
+    //  This is kinda dumb.  Change it Vector3.down
+    //
     private void MoveEnemyLaser()
         { transform.Translate(Vector3.up * Time.deltaTime * -mySpeed); }
 
