@@ -13,13 +13,24 @@ public class SpawnManager : MonoBehaviour
     //
     //  Wave Manager probalby needs to be an array...
     //
-    [SerializeField] private GameObject    enemyContainer;
-    [SerializeField] private GameObject    powerUpContainer;
+    [SerializeField] private GameObject enemyContainer;
+    [SerializeField] private GameObject powerUpContainer;
     //[SerializeField] private GameObject[]  powerUpPrefabs;
-    [SerializeField] private GameManager   gameManager;
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private WaveManager[] currentWave;
-    [SerializeField] private Spawnable[]   spawnableObjects;
-    [SerializeField] private int[]         spawnWeight;
+    [SerializeField] private Spawnable[] spawnableObjects;
+    [SerializeField] private Spawnable[] spawnableObjects_2;
+    [SerializeField] private Spawnable[] spawnableObjects_3;
+    [SerializeField] private Spawnable[] spawnableObjects_4;
+    [SerializeField] private int[] spawnWeight;
+    [SerializeField] private object[] waveSpawnables;
+
+    //
+    //  Possibly create an array we can loop through
+    //  waveSpawnables[] = [spawnableObjects, spawnableObjects_2, spawnableObjects_3, spawnableObjects_4]
+    //  That we can loop throuhg
+    //  Then possibly, loop again applying some math to the values to make it endless
+    //
 
     //
     // Data Structures
@@ -36,7 +47,7 @@ public class SpawnManager : MonoBehaviour
         {
             _numberOfEnemyToSpawn = numberOfEnemyToSpawn;
             _spawnRateRange       = spawnRateRange;
-        }
+            }
         public float[] SpawnRateRange       { get { return _spawnRateRange;       } set { _spawnRateRange       = value; } }
         public int     NumberOfEnemyToSpawn { get { return _numberOfEnemyToSpawn; } set { _numberOfEnemyToSpawn = value; } }
     }
@@ -94,6 +105,10 @@ public class SpawnManager : MonoBehaviour
     {
         NullCheckOnStartup();
         StartCoroutine(WaitforGameStart());
+        waveSpawnables[0] = spawnableObjects;
+        //waveSpawnables[1] = spawnableObjects_2;
+        //waveSpawnables[2] = spawnableObjects_3;
+        //waveSpawnables[3] = spawnableObjects_4;
     }
 
     private void Update()
@@ -169,7 +184,9 @@ public class SpawnManager : MonoBehaviour
     {
         int i = 0;
         spawnWeight = Enumerable.Repeat<int>(0, 0).ToArray();
-        foreach (Spawnable spawnableObject in spawnableObjects)
+        //foreach (Spawnable spawnableObject in spawnableObjects)
+        Spawnable nextWave = Spawnable[] waveSpawnables[0];
+        foreach (Spawnable spawnableObject in )
         {
             spawnWeight = spawnWeight.Concat(Enumerable.Repeat<int>(i, spawnableObject.Weight).ToArray()).ToArray();
             i++;
