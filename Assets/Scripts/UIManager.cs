@@ -177,7 +177,7 @@ public class UIManager : MonoBehaviour
     {
         bool flash;
         gameOverText.text = "WAVE OVER";
-        restartText.text  = "Press the 'R' key to restart the level";
+        restartText.text  = "Press the 'R' key to start the next level";
         gameOverText.gameObject.SetActive(true);
         restartText.gameObject.SetActive(true);
         while (gameManager.WaveOver)

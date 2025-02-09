@@ -6,66 +6,93 @@ using System.Linq;
 public class SpawnManager : MonoBehaviour
 {
     //
-    // Boundaries and timers
-    //
-    //
     // Game Objects populated in Inspector
     //
-    //  Wave Manager probalby needs to be an array...
-    //
-    [SerializeField] private GameObject enemyContainer;
-    [SerializeField] private GameObject powerUpContainer;
-    //[SerializeField] private GameObject[]  powerUpPrefabs;
-    [SerializeField] private GameManager gameManager;
-    [SerializeField] private WaveManager[] currentWave;
-    [SerializeField] private Spawnable[] spawnableObjects;
-    [SerializeField] private Spawnable[] spawnableObjects_2;
-    [SerializeField] private Spawnable[] spawnableObjects_3;
-    [SerializeField] private Spawnable[] spawnableObjects_4;
-    [SerializeField] private int[] spawnWeight;
-    [SerializeField] private object[] waveSpawnables;
+
+    [SerializeField] private GameObject    enemyContainer;
+    [SerializeField] private GameObject    powerUpContainer;
+    [SerializeField] private GameManager   gameManager;
+    [Tooltip("Create a new element for each distinct wave.")]
+    [SerializeField] private WaveManager[] waveManager;
+    [SerializeField] private int[]         spawnWeight;
 
     //
-    //  Possibly create an array we can loop through
-    //  waveSpawnables[] = [spawnableObjects, spawnableObjects_2, spawnableObjects_3, spawnableObjects_4]
-    //  That we can loop throuhg
-    //  Then possibly, loop again applying some math to the values to make it endless
+    // Properties
     //
+
+    private WaveManager currentWave
+        { get { return waveManager[gameManager.CurrentWave - 1]; } }
+    private int RandomIndex
+        { get { return spawnWeight[Random.Range(0, spawnWeight.Length - 1)]; } }
+    private Spawnable CurrentSpawnadObject 
+        { get; set; }
+    private Transform CurrentSpawnableContainer 
+        { get; set; }
 
     //
     // Data Structures
     //
 
+    public enum SpawnableTypes
+    {
+          Enemy
+        , PowerUp
+    };
+
+    public enum SpwanableNames
+    {
+          Vertical
+        , HorizontalRight
+        , HorizontalLeft
+        , HorizontalZigZagRight
+        , HorizontalZagZagLeft
+        , Ammo
+        , Speed
+        , Shield
+        , TripleShot
+        , Health
+        , Spiral
+        , NegativeAmmo
+    };
+
     [System.Serializable]
     public struct WaveManager
     {
-        public float[] _spawnRateRange;
-        public int     _numberOfEnemyToSpawn;
-        public WaveManager ( int     numberOfEnemyToSpawn
-                           , float[] spawnRateRange
-                           )
+        [Tooltip("High and Low value in seconds to spawn next game object.  Array size should be 2.  Element 0 is the lower range, Element 1 the upper.  Values are floats.")] 
+        public float[]     _spawnRateRange;
+        [Tooltip("Total number of enemy ships to spawn, regardless of type.")]
+        public int         _numberOfEnemyToSpawn;
+        [Tooltip("Create a new element for each object type to spawn in this wave.  This includes both enemy and powerups.")]
+        public Spawnable[] _spawnableObjects;
+        public WaveManager( int         numberOfEnemyToSpawn
+                          , float[]     spawnRateRange
+                          , Spawnable[] spawnableObjects
+                          )
         {
             _numberOfEnemyToSpawn = numberOfEnemyToSpawn;
             _spawnRateRange       = spawnRateRange;
-            }
+            _spawnableObjects     = spawnableObjects;
+        }
         public float[] SpawnRateRange       { get { return _spawnRateRange;       } set { _spawnRateRange       = value; } }
         public int     NumberOfEnemyToSpawn { get { return _numberOfEnemyToSpawn; } set { _numberOfEnemyToSpawn = value; } }
+        public Spawnable[] SpawnableObjects { get { return _spawnableObjects;     } set { _spawnableObjects     = value; } }
     }
 
     //
     //  ToDo: Implement mvementSpeed
     //
     [System.Serializable]
-    private struct Spawnable
+    public struct Spawnable
     {
-        public GameObject _prefab;
-        public int        _weight;
-        public string     _name, _type;
-        public float      _movementSpeed;
+        public GameObject     _prefab;
+        public int            _weight;
+        public float          _movementSpeed;
+        public SpwanableNames _name;
+        public SpawnableTypes _type;
         public Spawnable( GameObject prefab
                         , int        weight
-                        , string     name
-                        , string     type
+                        , SpwanableNames name
+                        , SpawnableTypes type
                         , float      movementSpeed
                         )
         {
@@ -75,16 +102,12 @@ public class SpawnManager : MonoBehaviour
             _type          = type;
             _movementSpeed = movementSpeed;
         }
-        public GameObject Prefab        { get { return _prefab;        } set { _prefab        = value; } }
-        public string     Name          { get { return _name;          } set { _name          = value; } }
-        public string     Type          { get { return _type;          } set { _type          = value; } }
-        public float      MovementSpeed { get { return _movementSpeed; } set { _movementSpeed = value; } }
-        public int        Weight        { get { return _weight;        } set { _weight        = value; } }
+        public GameObject     Prefab        { get { return _prefab;        } set { _prefab        = value; } }
+        public SpwanableNames Name          { get { return _name;          } set { _name          = value; } }
+        public SpawnableTypes Type          { get { return _type;          } set { _type          = value; } }
+        public float          MovementSpeed { get { return _movementSpeed; } set { _movementSpeed = value; } }
+        public int            Weight        { get { return _weight;        } set { _weight        = value; } }
     }
-
-    //
-    // Properties
-    //
 
     //
     // Game Control              ============================================================
@@ -96,19 +119,12 @@ public class SpawnManager : MonoBehaviour
         if (enemyContainer        == null) { Debug.LogError("Enemy Container is NULL"); }
         if (powerUpContainer      == null) { Debug.LogError("PowerUp Container is NULL"); }
         if (gameManager           == null) { Debug.LogError("Game Manager is NULL"); }
-        // this does not work if the array size is declared but one or more of the elements is not set.
-        //if (powerUpPrefabs.Length   == 0)  { Debug.LogError("PowerUp prefabs is EMPTY"); }
-        if (spawnableObjects.Length == 0)  { Debug.LogError("Spawnable Objects is EMPTY"); }
     }
 
     private void Start() 
     {
         NullCheckOnStartup();
         StartCoroutine(WaitforGameStart());
-        waveSpawnables[0] = spawnableObjects;
-        //waveSpawnables[1] = spawnableObjects_2;
-        //waveSpawnables[2] = spawnableObjects_3;
-        //waveSpawnables[3] = spawnableObjects_4;
     }
 
     private void Update()
@@ -127,21 +143,24 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnWave()
     {
-        SetSpawnWeight();
         gameManager.CurrentWave++;
+        SetSpawnWeight();
         StartCoroutine(SpawnRoutine());
+    }
+
+    private void SetSpawnWeight()
+    {
+        int i = 0;
+        spawnWeight = Enumerable.Repeat<int>(0, 0).ToArray();       // There's got to be a better way to reset this array too zero entries
+        foreach (Spawnable spawnableObject in currentWave.SpawnableObjects)
+        {
+            spawnWeight = spawnWeight.Concat(Enumerable.Repeat<int>(i, spawnableObject.Weight).ToArray()).ToArray();
+            i++;
+        }
     }
 
     //
     // Watchdogs                 ============================================================
-    //
-
-    //
-    // BUG:  These need to end.  Otherwise the methods above will start new ones
-    //       leaving these running.
-    //       When Enemy count goes to zero it needs to exit.
-    //       The problem is we are starting this with the Start routine as well as update.
-    //       The while(true) is waiting for real game start (destroiy asteroid).
     //
 
     private IEnumerator WaitforGameStart()
@@ -152,46 +171,40 @@ public class SpawnManager : MonoBehaviour
     }
 
     //
-    // Need to refactor enemy count if spawning powerups also
-    //  If max enemy, no longer spawn enemy  Maybe rebuild SpawnWeight
-    //
     //  ToDo:  Once max enemy have spawned, there are no more powerups because the loop ends.
+    //         have not yet decided if this is a feature or bug.
+    //  ToDo:  Currently no end of game mangement.  Game will error out if you attempt to 
+    //         continue beyond last defined wave.  Have not yet decided if this will be
+    //         Game Over, or if we will apply a calculation there after to make it infinite.
     //
+
     private IEnumerator SpawnRoutine()
     {
-        gameManager.CurrentEnemyCount += currentWave[gameManager.CurrentWave -1].NumberOfEnemyToSpawn;
-        gameManager.WaveOver = false;
-        while (currentWave[gameManager.CurrentWave - 1].NumberOfEnemyToSpawn > 0 && gameManager.GameLive) 
-        {
-            var index = spawnWeight[Random.Range(0, spawnWeight.Length - 1)];
-            GameObject newSpawnable = Instantiate(spawnableObjects[index].Prefab);
-            newSpawnable.GetComponent<ISpawnable>().MySpeed = spawnableObjects[index].MovementSpeed;
+        gameManager.CurrentEnemyCount += currentWave.NumberOfEnemyToSpawn;
+        gameManager.WaveOver           = false;
 
-            if (newSpawnable != null && spawnableObjects[index].Type.ToUpper() == "ENEMY") 
-            { 
-                newSpawnable.transform.parent = enemyContainer.transform;
-                currentWave[gameManager.CurrentWave - 1].NumberOfEnemyToSpawn--;
-            } else if (newSpawnable != null && spawnableObjects[index].Type.ToUpper() == "POWERUP") 
+        int index;
+        while (currentWave.NumberOfEnemyToSpawn > 0 && gameManager.GameLive)
+        {
+            index = RandomIndex;
+            CurrentSpawnadObject = currentWave.SpawnableObjects[index];
+
+            if      ( CurrentSpawnadObject.Type == SpawnableTypes.Enemy   )
             {
-                newSpawnable.transform.parent = powerUpContainer.transform;
+                CurrentSpawnableContainer = enemyContainer.transform;
+                waveManager[gameManager.CurrentWave - 1].NumberOfEnemyToSpawn--;
+            }
+            else if ( CurrentSpawnadObject.Type == SpawnableTypes.PowerUp )
+            {
+                CurrentSpawnableContainer = powerUpContainer.transform;
             }
 
-            yield return new WaitForSeconds(Random.Range( currentWave[gameManager.CurrentWave - 1].SpawnRateRange[0]
-                                                        , currentWave[gameManager.CurrentWave - 1].SpawnRateRange[1]));
-        }
-    }
-    private void SetSpawnWeight()
-    {
-        int i = 0;
-        spawnWeight = Enumerable.Repeat<int>(0, 0).ToArray();
-        //foreach (Spawnable spawnableObject in spawnableObjects)
-        Spawnable nextWave = Spawnable[] waveSpawnables[0];
-        foreach (Spawnable spawnableObject in )
-        {
-            spawnWeight = spawnWeight.Concat(Enumerable.Repeat<int>(i, spawnableObject.Weight).ToArray()).ToArray();
-            i++;
-        }
-    }
+            GameObject newSpawnable = Instantiate(CurrentSpawnadObject.Prefab, CurrentSpawnableContainer);
+            newSpawnable.GetComponent<ISpawnable>().MySpeed = CurrentSpawnadObject.MovementSpeed;
 
+            yield return new WaitForSeconds(Random.Range( currentWave.SpawnRateRange[0]
+                                                        , currentWave.SpawnRateRange[1]));
+        }
+    }
 
 }

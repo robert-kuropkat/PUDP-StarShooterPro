@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     {
         if (WaveOver && GameLive) { return; }
 
-        if (  Input.GetKeyDown(KeyCode.R)           // Restart game
+        if (  Input.GetKeyDown(KeyCode.R)           // Restart game/wave
            && gameOver )
            { SceneManager.LoadScene("Game"); }
         

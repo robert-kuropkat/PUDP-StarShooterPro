@@ -775,88 +775,225 @@ MonoBehaviour:
   enemyContainer: {fileID: 1879174202}
   powerUpContainer: {fileID: 1379045096}
   gameManager: {fileID: 1366714290}
-  currentWave:
+  waveManager:
   - _spawnRateRange:
-    - 2
+    - 3
     - 5
     _numberOfEnemyToSpawn: 5
+    _spawnableObjects:
+    - _prefab: {fileID: 2725393502940477956, guid: a4a8a4250073a4d44b9872d1e38f51f3,
+        type: 3}
+      _weight: 10
+      _movementSpeed: 4
+      _name: 0
+      _type: 0
+    - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 5
+      _type: 1
+    - _prefab: {fileID: 128587755637543872, guid: 5fc849d9f05ad89439facca489326afc,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 6
+      _type: 1
+    - _prefab: {fileID: 6136820509590751115, guid: 6375b4c27c44dfe4697383e4b49870d0,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 7
+      _type: 1
+    - _prefab: {fileID: 1682694201612610876, guid: 9240539bd9b8bb64d9c4dc1c459ca393,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 8
+      _type: 0
   - _spawnRateRange:
-    - 1
     - 3
-    _numberOfEnemyToSpawn: 6
-  spawnableObjects:
-  - _prefab: {fileID: 2725393502940477956, guid: a4a8a4250073a4d44b9872d1e38f51f3,
-      type: 3}
-    _weight: 20
-    _name: Vertical
-    _type: Enemy
-    _movementSpeed: 4
-  - _prefab: {fileID: 5360043046592895184, guid: 0ec48b80c943a2346b8d95a6ba6f33b3,
-      type: 3}
-    _weight: 10
-    _name: Horizontal
-    _type: Enemy
-    _movementSpeed: 4
-  - _prefab: {fileID: 3878311147254371189, guid: 964ed687012929e428ded74b7ba23721,
-      type: 3}
-    _weight: 20
-    _name: Horizontal ZigZag Left
-    _type: Enemy
-    _movementSpeed: 4
-  - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
-      type: 3}
-    _weight: 2
-    _name: Ammo
-    _type: PowerUp
-    _movementSpeed: 3
-  - _prefab: {fileID: 1016275360781342716, guid: eefe0b37469264744a3762ca0d6d2324,
-      type: 3}
-    _weight: 2
-    _name: Ammo
-    _type: PowerUp
-    _movementSpeed: 3
-  - _prefab: {fileID: 2588135242098431631, guid: 9c8f30d1d6b81274c875948ae8185d8e,
-      type: 3}
-    _weight: 2
-    _name: Ammo
-    _type: PowerUp
-    _movementSpeed: 3
-  - _prefab: {fileID: 6136820509590751115, guid: 6375b4c27c44dfe4697383e4b49870d0,
-      type: 3}
-    _weight: 2
-    _name: Ammo
-    _type: PowerUp
-    _movementSpeed: 3
-  - _prefab: {fileID: 128587755637543872, guid: 5fc849d9f05ad89439facca489326afc,
-      type: 3}
-    _weight: 2
-    _name: Ammo
-    _type: PowerUp
-    _movementSpeed: 3
-  - _prefab: {fileID: 314213025121937127, guid: d043dccff31415449a882ead539b33ff,
-      type: 3}
-    _weight: 1
-    _name: Ammo
-    _type: PowerUp
-    _movementSpeed: 3
-  - _prefab: {fileID: 1682694201612610876, guid: 9240539bd9b8bb64d9c4dc1c459ca393,
-      type: 3}
-    _weight: 2
-    _name: Ammo
-    _type: PowerUp
-    _movementSpeed: 3
-  - _prefab: {fileID: 6437775079737936828, guid: ec868fc3762f5524882c13598a1d3498,
-      type: 3}
-    _weight: 20
-    _name: Enemy Horizontal Left
-    _type: Enemy
-    _movementSpeed: 4
-  - _prefab: {fileID: 253337353829263878, guid: b72b9bcff3a56c141a7b4681b474ff84,
-      type: 3}
-    _weight: 20
-    _name: Enemy Horizontal Zig Zag Right
-    _type: Enemy
-    _movementSpeed: 4
+    - 5
+    _numberOfEnemyToSpawn: 8
+    _spawnableObjects:
+    - _prefab: {fileID: 2725393502940477956, guid: a4a8a4250073a4d44b9872d1e38f51f3,
+        type: 3}
+      _weight: 10
+      _movementSpeed: 4
+      _name: 0
+      _type: 0
+    - _prefab: {fileID: 5360043046592895184, guid: 0ec48b80c943a2346b8d95a6ba6f33b3,
+        type: 3}
+      _weight: 5
+      _movementSpeed: 4
+      _name: 1
+      _type: 0
+    - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 5
+      _type: 1
+    - _prefab: {fileID: 128587755637543872, guid: 5fc849d9f05ad89439facca489326afc,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 6
+      _type: 1
+    - _prefab: {fileID: 6136820509590751115, guid: 6375b4c27c44dfe4697383e4b49870d0,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 7
+      _type: 1
+    - _prefab: {fileID: 1682694201612610876, guid: 9240539bd9b8bb64d9c4dc1c459ca393,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 8
+      _type: 1
+    - _prefab: {fileID: 1016275360781342716, guid: eefe0b37469264744a3762ca0d6d2324,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 9
+      _type: 1
+  - _spawnRateRange:
+    - 3
+    - 5
+    _numberOfEnemyToSpawn: 8
+    _spawnableObjects:
+    - _prefab: {fileID: 2725393502940477956, guid: a4a8a4250073a4d44b9872d1e38f51f3,
+        type: 3}
+      _weight: 10
+      _movementSpeed: 4
+      _name: 0
+      _type: 0
+    - _prefab: {fileID: 5360043046592895184, guid: 0ec48b80c943a2346b8d95a6ba6f33b3,
+        type: 3}
+      _weight: 5
+      _movementSpeed: 4
+      _name: 1
+      _type: 0
+    - _prefab: {fileID: 3878311147254371189, guid: 964ed687012929e428ded74b7ba23721,
+        type: 3}
+      _weight: 5
+      _movementSpeed: 4
+      _name: 4
+      _type: 0
+    - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 5
+      _type: 1
+    - _prefab: {fileID: 128587755637543872, guid: 5fc849d9f05ad89439facca489326afc,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 6
+      _type: 1
+    - _prefab: {fileID: 6136820509590751115, guid: 6375b4c27c44dfe4697383e4b49870d0,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 7
+      _type: 1
+    - _prefab: {fileID: 1682694201612610876, guid: 9240539bd9b8bb64d9c4dc1c459ca393,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 8
+      _type: 1
+    - _prefab: {fileID: 1016275360781342716, guid: eefe0b37469264744a3762ca0d6d2324,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 9
+      _type: 1
+    - _prefab: {fileID: 314213025121937127, guid: d043dccff31415449a882ead539b33ff,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 10
+      _type: 1
+  - _spawnRateRange:
+    - 3
+    - 5
+    _numberOfEnemyToSpawn: 10
+    _spawnableObjects:
+    - _prefab: {fileID: 2725393502940477956, guid: a4a8a4250073a4d44b9872d1e38f51f3,
+        type: 3}
+      _weight: 10
+      _movementSpeed: 0
+      _name: 0
+      _type: 0
+    - _prefab: {fileID: 5360043046592895184, guid: 0ec48b80c943a2346b8d95a6ba6f33b3,
+        type: 3}
+      _weight: 5
+      _movementSpeed: 4
+      _name: 1
+      _type: 0
+    - _prefab: {fileID: 6437775079737936828, guid: ec868fc3762f5524882c13598a1d3498,
+        type: 3}
+      _weight: 5
+      _movementSpeed: 4
+      _name: 2
+      _type: 0
+    - _prefab: {fileID: 253337353829263878, guid: b72b9bcff3a56c141a7b4681b474ff84,
+        type: 3}
+      _weight: 5
+      _movementSpeed: 4
+      _name: 3
+      _type: 0
+    - _prefab: {fileID: 3878311147254371189, guid: 964ed687012929e428ded74b7ba23721,
+        type: 3}
+      _weight: 5
+      _movementSpeed: 4
+      _name: 4
+      _type: 0
+    - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 5
+      _type: 1
+    - _prefab: {fileID: 128587755637543872, guid: 5fc849d9f05ad89439facca489326afc,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 6
+      _type: 1
+    - _prefab: {fileID: 6136820509590751115, guid: 6375b4c27c44dfe4697383e4b49870d0,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 7
+      _type: 1
+    - _prefab: {fileID: 1682694201612610876, guid: 9240539bd9b8bb64d9c4dc1c459ca393,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 8
+      _type: 1
+    - _prefab: {fileID: 1016275360781342716, guid: eefe0b37469264744a3762ca0d6d2324,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 9
+      _type: 1
+    - _prefab: {fileID: 314213025121937127, guid: d043dccff31415449a882ead539b33ff,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 10
+      _type: 1
+    - _prefab: {fileID: 2588135242098431631, guid: 9c8f30d1d6b81274c875948ae8185d8e,
+        type: 3}
+      _weight: 1
+      _movementSpeed: 3
+      _name: 11
+      _type: 1
   spawnWeight: 
 --- !u!4 &606388764
 Transform:
