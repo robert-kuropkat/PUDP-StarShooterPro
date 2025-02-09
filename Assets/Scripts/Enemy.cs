@@ -20,6 +20,12 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     [SerializeField] private float explosionTimer  = 2.4f;
 
     //
+    // Game Objects populated in Inspector
+    //
+    [SerializeField] private EnemyShields shieldAnim;
+
+
+    //
     // Game Objects non-Serialized objects are populated in code
     //
     [SerializeField] private GameObject laserPrefab;
@@ -62,12 +68,15 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
         if (myPlayer         == null) { Debug.LogError("The Player is NULL."); }
         if (laserPrefab      == null) { Debug.LogError("The Enemy Laser Prefab is NULL."); }
         if (myExplosion_anim == null) { Debug.LogError("The Explosion Animator is NULL."); }
+        if (shieldAnim       == null) { Debug.LogError("The Shield Animation is NULL"); }
+
     }
 
     protected virtual void Start() 
     { 
-        myPlayer         = GameObject.Find("Player").GetComponent<Player>();
-        myExplosion_anim = GetComponent<Animator>();
+        myPlayer           = GameObject.Find("Player").GetComponent<Player>();
+        myExplosion_anim   = GetComponent<Animator>();
+        AcivateShield();
 
         NullCheckOnStartup();
         StartCoroutine(FireLaser());
@@ -118,6 +127,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
 
     private void EnemyDeathScene()
     {
+        if (shieldAnim.IsActive) { return; }
         ImDead = true; // Flag to short circuit respawning in Update()
         DisableCollisionComponenets();
         TriggerExplosion();
@@ -139,4 +149,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
 
     private void NotifyPlayer()     { myPlayer.EnemyDestroyed(); }
 
+    private void AcivateShield()    { shieldAnim.IsActive = true; }
+
+    private void DeacivateShield()  { shieldAnim.IsActive = false; }
 }
