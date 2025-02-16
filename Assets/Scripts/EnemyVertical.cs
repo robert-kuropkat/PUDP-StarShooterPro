@@ -12,6 +12,7 @@ public class EnemyVertical : Enemy
     protected override Vector3 SpawnPosition
     {
         get {
+            Debug.Log("Spawn Boundaries");
             return new Vector3( Random.Range( -(VerticalSpawnBoundary.X)
                                             ,  (VerticalSpawnBoundary.X))
                               , VerticalSpawnBoundary.Y, 0);
