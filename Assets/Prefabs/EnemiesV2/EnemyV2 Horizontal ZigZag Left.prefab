@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &6493132660800242524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127301952137394419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffec70a2eca86c74db76da4d21a2a7e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  laserLowerTimer: 2
+  laserUpperTimer: 5
+  explosionTimer: 2.4
+  shieldAnim: {fileID: 252599744387294888}
+  laserPrefab: {fileID: 1769212021685593957, guid: e7dc8ad5b558cd34798c0ee774d963fb,
+    type: 3}
+  ScreenBoundary:
+    _x: 9.5
+    _y: 6
+  HorizontalSpawnBoundary:
+    _x: 11.5
+    _y: 5
+  VerticalSpawnBoundary:
+    _x: 8.5
+    _y: 8
+  mySpeed: 4
+  changeDirection: 0
+  myDepthCharge: {fileID: 9054855247933620457, guid: dbee9359f954f294c9950028180a737d,
+    type: 3}
+--- !u!1001 &252599745320369468
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyV2 Horizontal ZigZag Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7673029940406648870, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3, type: 3}
+--- !u!1 &127301952137394419 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+    type: 3}
+  m_PrefabInstance: {fileID: 252599745320369468}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &252599744387294888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1487117204, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+    type: 3}
+  m_PrefabInstance: {fileID: 252599745320369468}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3cf4698783eb64cb420ac5bf8568d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

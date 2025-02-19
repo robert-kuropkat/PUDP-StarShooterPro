@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1487117204}
   m_Layer: 0
   m_Name: Enemy Shields
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -878832699
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 333b0196b7a764df5a7768ead9b69dbc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -135,7 +135,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -179,13 +179,14 @@ GameObject:
   - component: {fileID: 163587892238632435}
   - component: {fileID: 163587892238632434}
   - component: {fileID: 163587892238632433}
+  - component: {fileID: 7673029940406648870}
   m_Layer: 0
   m_Name: EnemyV2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &163587892238632438
 Transform:
   m_ObjectHideFlags: 0
@@ -413,3 +414,31 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7673029940406648870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163587892238632399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71dca72dca4ff4e43890fa41d7f4a966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  laserLowerTimer: 2
+  laserUpperTimer: 5
+  explosionTimer: 2.4
+  shieldAnim: {fileID: 1487117204}
+  laserPrefab: {fileID: 1769212021685593957, guid: e7dc8ad5b558cd34798c0ee774d963fb,
+    type: 3}
+  ScreenBoundary:
+    _x: 9.5
+    _y: 6
+  HorizontalSpawnBoundary:
+    _x: 11.5
+    _y: 5
+  VerticalSpawnBoundary:
+    _x: 8.5
+    _y: 8
+  mySpeed: 4
