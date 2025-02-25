@@ -9,8 +9,10 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //
     abstract public    float   MySpeed { get; set; }
     abstract protected Vector3 SpawnPosition { get; }
+    abstract protected Vector3 MoveDirection { get; set; }
     abstract protected void    MoveMe();
     abstract protected void    Update();
+    abstract protected void    Teleport();
 
     //
     // Timers
@@ -22,7 +24,9 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //
     // Game Objects populated in Inspector
     //
-    [SerializeField] private EnemyShields shieldAnim;
+    [SerializeField] private EnemyShields     shieldAnim;
+    [SerializeField] private BoxCollider2D    impactCollider;
+    //[SerializeField] private CircleCollider2D circleCollider;
 
 
     //
@@ -45,14 +49,14 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //  May need to give all four values, especially for the spawn boundaries
     //
 
-    [System.Serializable]
-    protected struct Boundary
-    {
-        [SerializeField] private float _x, _y;
-        public Boundary(float x, float y) { _x = x; _y = y; }
-        public float X { get { return _x; } }
-        public float Y { get { return _y; } }
-    }
+    //[System.Serializable]
+    //protected struct Boundary
+    //{
+    //    [SerializeField] private float _x, _y;
+    //    public Boundary(float x, float y) { _x = x; _y = y; }
+    //    public float X { get { return _x; } }
+    //    public float Y { get { return _y; } }
+    //}
     [SerializeField] protected Boundary ScreenBoundary          = new Boundary( 9.5f, 6.0f);
     [SerializeField] protected Boundary HorizontalSpawnBoundary = new Boundary(11.5f, 5.0f);
     [SerializeField] protected Boundary VerticalSpawnBoundary   = new Boundary( 8.5f, 8.0f);
@@ -76,7 +80,6 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     { 
         myPlayer           = GameObject.Find("Player").GetComponent<Player>();
         myExplosion_anim   = GetComponent<Animator>();
-        AcivateShield();
 
         NullCheckOnStartup();
         StartCoroutine(FireLaser());
@@ -149,7 +152,29 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
 
     private void NotifyPlayer()     { myPlayer.EnemyDestroyed(); }
 
-    private void AcivateShield()    { shieldAnim.IsActive = true; }
+    public  void ActivateShield()   { shieldAnim.IsActive = true; }
 
     private void DeacivateShield()  { shieldAnim.IsActive = false; }
+
+    public void  ChasePlayer() 
+    {
+        //Debug.Log("ChasePlayer()");
+        if (ImDead) { return; }
+        //Debug.Log("Chase Mode");
+        float newAngle = Mathf.Atan2(myPlayer.transform.position.y - transform.position.y, myPlayer.transform.position.x - transform.position.x) * -180 / Mathf.PI;
+        //Debug.Log("New Angle " + newAngle);
+        if      (newAngle >   0 && newAngle <=  90) { newAngle *=  1;                 } // Player in Quadrant 4
+        else if (newAngle >  90                   ) { newAngle *= -1; newAngle += 90; } // Player in Quadrant 3
+        else if (newAngle <   0 && newAngle >= -90) { newAngle *= -1; newAngle += 90; } // Player in Quadrant 1
+        else if (newAngle < -90                   ) { newAngle *=  1;                 } // Player in Quadrant 2
+        //Debug.Log("New Angle corrected " + newAngle);
+        transform.eulerAngles = new Vector3(0, 0, newAngle);
+        //transform.LookAt(myPlayer.transform.position * -1);
+    }
+
+    protected void CheckBoundaries()
+    {
+        if (Mathf.Abs(transform.position.y) > VerticalSpawnBoundary.Y  ) { Teleport(); transform.eulerAngles = new Vector3(0, 0, 0); }
+        if (Mathf.Abs(transform.position.x) > HorizontalSpawnBoundary.X) { Teleport(); transform.eulerAngles = new Vector3(0, 0, 0); }
+    }
 }

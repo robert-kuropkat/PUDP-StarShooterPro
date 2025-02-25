@@ -20,94 +20,11 @@ public class SpawnManager : MonoBehaviour
     // Properties
     //
 
-    private WaveManager currentWave
-        { get { return waveManager[gameManager.CurrentWave - 1]; } }
-    private int RandomIndex
-        { get { return spawnWeight[Random.Range(0, spawnWeight.Length - 1)]; } }
-    private Spawnable CurrentSpawnadObject 
-        { get; set; }
-    private Transform CurrentSpawnableContainer 
-        { get; set; }
+    private WaveManager currentWave                { get { return waveManager[gameManager.CurrentWave - 1]; } }
+    private int         RandomIndex                { get { return spawnWeight[Random.Range(0, spawnWeight.Length - 1)]; } }
+    private Spawnable   CurrentSpawnadObject       { get; set; }
+    private Transform   CurrentSpawnableContainer  { get; set; }
 
-    //
-    // Data Structures
-    //
-
-    public enum SpawnableTypes
-    {
-          Enemy
-        , PowerUp
-    };
-
-    public enum SpwanableNames
-    {
-          Vertical
-        , HorizontalRight
-        , HorizontalLeft
-        , HorizontalZigZagRight
-        , HorizontalZagZagLeft
-        , Ammo
-        , Speed
-        , Shield
-        , TripleShot
-        , Health
-        , Spiral
-        , NegativeAmmo
-    };
-
-    [System.Serializable]
-    private struct WaveManager
-    {
-        [SerializeField, Tooltip("High and Low value in seconds to spawn next game object.  Array size should be 2.  Element 0 is the lower range, Element 1 the upper.  Values are floats.")] 
-        private float[]     _spawnRateRange;
-        [SerializeField, Tooltip("Total number of enemy ships to spawn, regardless of type.")]
-        private int         _numberOfEnemyToSpawn;
-        [SerializeField, Tooltip("Create a new element for each object type to spawn in this wave.  This includes both enemy and powerups.")]
-        private Spawnable[] _spawnableObjects;
-        public WaveManager( int         numberOfEnemyToSpawn
-                          , float[]     spawnRateRange
-                          , Spawnable[] spawnableObjects
-                          )
-        {
-            _numberOfEnemyToSpawn = numberOfEnemyToSpawn;
-            _spawnRateRange       = spawnRateRange;
-            _spawnableObjects     = spawnableObjects;
-        }
-        public float[] SpawnRateRange       { get { return _spawnRateRange;       } set { _spawnRateRange       = value; } }
-        public int     NumberOfEnemyToSpawn { get { return _numberOfEnemyToSpawn; } set { _numberOfEnemyToSpawn = value; } }
-        public Spawnable[] SpawnableObjects { get { return _spawnableObjects;     } set { _spawnableObjects     = value; } }
-    }
-
-    //
-    //  ToDo: Implement mvementSpeed
-    //
-    [System.Serializable]
-    private struct Spawnable
-    {
-        [SerializeField] private GameObject     _prefab;
-        [SerializeField] private int            _weight;
-        [SerializeField] private float _movementSpeed;
-        [SerializeField] private SpwanableNames _name;
-        [SerializeField] private SpawnableTypes _type;
-        public Spawnable( GameObject prefab
-                        , int        weight
-                        , SpwanableNames name
-                        , SpawnableTypes type
-                        , float      movementSpeed
-                        )
-        {
-            _prefab        = prefab;
-            _weight        = weight;
-            _name          = name;
-            _type          = type;
-            _movementSpeed = movementSpeed;
-        }
-        public GameObject     Prefab        { get { return _prefab;        } set { _prefab        = value; } }
-        public SpwanableNames Name          { get { return _name;          } set { _name          = value; } }
-        public SpawnableTypes Type          { get { return _type;          } set { _type          = value; } }
-        public float          MovementSpeed { get { return _movementSpeed; } set { _movementSpeed = value; } }
-        public int            Weight        { get { return _weight;        } set { _weight        = value; } }
-    }
 
     //
     // Game Control              ============================================================
@@ -201,6 +118,11 @@ public class SpawnManager : MonoBehaviour
 
             GameObject newSpawnable = Instantiate(CurrentSpawnadObject.Prefab, CurrentSpawnableContainer);
             newSpawnable.GetComponent<ISpawnable>().MySpeed = CurrentSpawnadObject.MovementSpeed;
+
+            if (  CurrentSpawnadObject.Type == SpawnableTypes.Enemy
+               && Random.Range(0f,100f)     <= currentWave.ShieldedEnemyPercentage 
+               )
+               { newSpawnable.GetComponent<Enemy>().ActivateShield(); }
 
             yield return new WaitForSeconds(Random.Range( currentWave.SpawnRateRange[0]
                                                         , currentWave.SpawnRateRange[1]));

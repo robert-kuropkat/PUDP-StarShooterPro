@@ -40,6 +40,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyV2 Horizontal Left
       objectReference: {fileID: 0}
+    - target: {fileID: 163587892238632435, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+        type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 163587892238632438, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}
       propertyPath: m_RootOrder

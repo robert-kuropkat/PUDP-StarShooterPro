@@ -17,6 +17,8 @@ public class EnemyHorizontal : Enemy
 
     [SerializeField] protected float mySpeed = 4.0f;
     public override float MySpeed { get { return mySpeed; } set { mySpeed = value; } }
+    protected override Vector3 MoveDirection { get; set; }
+
 
     //
     // Game Loop
@@ -31,7 +33,7 @@ public class EnemyHorizontal : Enemy
     //
     // Game Object Control Methods
     //
-    protected void Teleport()
+    protected override void Teleport()
     { transform.position = SpawnPosition; }
 
 }

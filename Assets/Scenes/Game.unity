@@ -780,6 +780,7 @@ MonoBehaviour:
     - 3
     - 5
     _numberOfEnemyToSpawn: 5
+    _shieldedEnemyPercentage: 0
     _spawnableObjects:
     - _prefab: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}
@@ -789,7 +790,7 @@ MonoBehaviour:
       _type: 0
     - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
         type: 3}
-      _weight: 1
+      _weight: 5
       _movementSpeed: 3
       _name: 5
       _type: 1
@@ -815,6 +816,7 @@ MonoBehaviour:
     - 3
     - 5
     _numberOfEnemyToSpawn: 8
+    _shieldedEnemyPercentage: 0
     _spawnableObjects:
     - _prefab: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}
@@ -830,7 +832,7 @@ MonoBehaviour:
       _type: 0
     - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
         type: 3}
-      _weight: 1
+      _weight: 5
       _movementSpeed: 3
       _name: 5
       _type: 1
@@ -862,6 +864,7 @@ MonoBehaviour:
     - 3
     - 5
     _numberOfEnemyToSpawn: 8
+    _shieldedEnemyPercentage: 0
     _spawnableObjects:
     - _prefab: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}
@@ -883,7 +886,7 @@ MonoBehaviour:
       _type: 0
     - _prefab: {fileID: 5620990459473851297, guid: 8e6a8c237ac57b04b8c44f34ac3e80d6,
         type: 3}
-      _weight: 1
+      _weight: 5
       _movementSpeed: 3
       _name: 5
       _type: 1
@@ -921,6 +924,7 @@ MonoBehaviour:
     - 3
     - 5
     _numberOfEnemyToSpawn: 10
+    _shieldedEnemyPercentage: 0
     _spawnableObjects:
     - _prefab: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}
@@ -2510,7 +2514,7 @@ MonoBehaviour:
   topBoundary: 0
   bottomBoundary: -4
   ThrusterIncrease: 1.1
-  playerLives: 3
+  playerLives: 20
   playerScore: 0
   spawnManager: {fileID: 606388763}
   uiManager: {fileID: 1869133822}

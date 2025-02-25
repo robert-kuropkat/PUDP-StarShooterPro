@@ -21,7 +21,8 @@ public class EnemyHorizontalZigZagRight : EnemyHorizontalZigZag
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn
-        if (transform.position.x > (HorizontalSpawnBoundary.X)) { Teleport(); }
+        //if (transform.position.x > (HorizontalSpawnBoundary.X)) { Teleport(); }
+        CheckBoundaries();
     }
 
     protected override void MoveMe()
@@ -29,9 +30,9 @@ public class EnemyHorizontalZigZagRight : EnemyHorizontalZigZag
         //
         // might want to randomize the angle  right now it is just a 45degree angle (x=1, y=1)
         //
-        transform.Translate(new Vector3( 1
-                                       , -1 * (changeDirection ? 1 : -1)
-                                       , 0) * Time.deltaTime * mySpeed, Space.Self);
+        transform.Translate(new Vector3(  1
+                                       , -1  * (changeDirection ? 1 : -1)
+                                       ,  0) * (Time.deltaTime * mySpeed), Space.Self);
     }
 
 }

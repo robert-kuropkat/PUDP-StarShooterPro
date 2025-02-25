@@ -18,6 +18,8 @@ public class EnemyVertical : Enemy
         }
     }
 
+    protected override Vector3 MoveDirection { get; set; }
+
     //
     // Game Loop
     //
@@ -32,13 +34,14 @@ public class EnemyVertical : Enemy
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn at the top
-        if (transform.position.y < -VerticalSpawnBoundary.Y) { Teleport(); }
+        //if (transform.position.y < -VerticalSpawnBoundary.Y) { Teleport(); }
+        CheckBoundaries();
     }
 
     protected override void MoveMe()
-    { transform.Translate(Vector3.down * Time.deltaTime * mySpeed); }
+    { transform.Translate(Vector3.down * (Time.deltaTime * mySpeed)); }
 
-    protected void Teleport()
+    protected override void Teleport()
     { transform.position = SpawnPosition; }
 
 }
