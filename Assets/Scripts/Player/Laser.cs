@@ -7,8 +7,16 @@ public class Laser : MonoBehaviour
     //
     // Speed and Timers
     //
-    [SerializeField] private float mySpeed   = 8.0f;
-    [SerializeField] private float myTimeOut = 3f;
+    [SerializeField] private float mySpeed         = 8.0f;
+    [SerializeField] private float myTimeOut       = 3f;
+    [SerializeField] private float rearLaserOffset = 2.5f;
+
+    private int laserDirection = 1;
+
+    //
+    // Game Objects non-Serialized objects populated in code
+    //
+    private Player myPlayer;
 
     //
     // Game Control             ============================================================
@@ -16,6 +24,9 @@ public class Laser : MonoBehaviour
 
     private void Start()  
     {
+        myPlayer = GameObject.Find("Player").GetComponent<Player>();
+
+        SetEnemyLaserDirection();
         PutInContainer();
         Destroy(this.gameObject, myTimeOut); 
     }
@@ -40,14 +51,24 @@ public class Laser : MonoBehaviour
     // Helper Methods           ============================================================
     //
 
+    private void SetEnemyLaserDirection()
+    {
+        if (  transform.tag == "Enemy Laser"
+           && transform.position.y < myPlayer.transform.position.y) 
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + rearLaserOffset, 0);
+            laserDirection = -1;  
+        }
+    }
+
     //
     //  This is kinda dumb.  Change it Vector3.down
     //
     private void MoveEnemyLaser()
-        { transform.Translate(Vector3.up * Time.deltaTime * -mySpeed); }
+        { transform.Translate(Vector3.down * (Time.deltaTime * mySpeed * laserDirection)); }
 
     private void MovePlayerLaser()
-        { transform.Translate(Vector3.up * Time.deltaTime * mySpeed); }
+        { transform.Translate(Vector3.up * (Time.deltaTime * mySpeed)); }
 
     private void PutInContainer()
     {

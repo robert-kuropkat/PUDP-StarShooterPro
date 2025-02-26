@@ -99,7 +99,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
             // be seen but can be heard.
             //
             if (  myPlayer != null 
-               && transform.position.y > myPlayer.transform.position.y)
+               && transform.position.y > -ScreenBoundary.Y)
             {
                 Instantiate( laserPrefab
                            , transform.position
