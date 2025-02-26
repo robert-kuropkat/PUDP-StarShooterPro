@@ -25,8 +25,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     // Game Objects populated in Inspector
     //
     [SerializeField] private EnemyShields     shieldAnim;
-    [SerializeField] private BoxCollider2D    impactCollider;
-    //[SerializeField] private CircleCollider2D circleCollider;
+    [SerializeField] private CircleCollider2D proximityCollider;
 
 
     //
@@ -39,24 +38,9 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //
     // Properties
     //
+    protected Vector3 chaseVector = Vector3.zero;
     protected bool ImDead { get; set; } = false;
 
-    //
-    // Note:  Upper point is based on the nose of the player, not center.    (-4,6)
-    //        right/left is the right/left of the player, also not center.   (9.5,-9.5)
-    //        Maybe need three sets of boundaries.  Screen, object and spawn...
-    //
-    //  May need to give all four values, especially for the spawn boundaries
-    //
-
-    //[System.Serializable]
-    //protected struct Boundary
-    //{
-    //    [SerializeField] private float _x, _y;
-    //    public Boundary(float x, float y) { _x = x; _y = y; }
-    //    public float X { get { return _x; } }
-    //    public float Y { get { return _y; } }
-    //}
     [SerializeField] protected Boundary ScreenBoundary          = new Boundary( 9.5f, 6.0f);
     [SerializeField] protected Boundary HorizontalSpawnBoundary = new Boundary(11.5f, 5.0f);
     [SerializeField] protected Boundary VerticalSpawnBoundary   = new Boundary( 8.5f, 8.0f);
@@ -80,7 +64,8 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     { 
         myPlayer           = GameObject.Find("Player").GetComponent<Player>();
         myExplosion_anim   = GetComponent<Animator>();
-
+        
+        //DeactivateAgression();
         NullCheckOnStartup();
         StartCoroutine(FireLaser());
     }
@@ -156,25 +141,19 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
 
     private void DeacivateShield()  { shieldAnim.IsActive = false; }
 
-    public void  ChasePlayer() 
+    public void ActivateAgression() { proximityCollider.enabled = true; }
+
+    public void DeactivateAgression() { proximityCollider.enabled = false; }
+
+    public void ChasePlayer()
     {
-        //Debug.Log("ChasePlayer()");
-        if (ImDead) { return; }
-        //Debug.Log("Chase Mode");
-        float newAngle = Mathf.Atan2(myPlayer.transform.position.y - transform.position.y, myPlayer.transform.position.x - transform.position.x) * -180 / Mathf.PI;
-        //Debug.Log("New Angle " + newAngle);
-        if      (newAngle >   0 && newAngle <=  90) { newAngle *=  1;                 } // Player in Quadrant 4
-        else if (newAngle >  90                   ) { newAngle *= -1; newAngle += 90; } // Player in Quadrant 3
-        else if (newAngle <   0 && newAngle >= -90) { newAngle *= -1; newAngle += 90; } // Player in Quadrant 1
-        else if (newAngle < -90                   ) { newAngle *=  1;                 } // Player in Quadrant 2
-        //Debug.Log("New Angle corrected " + newAngle);
-        transform.eulerAngles = new Vector3(0, 0, newAngle);
-        //transform.LookAt(myPlayer.transform.position * -1);
+        chaseVector.x = (myPlayer.transform.position.x - transform.position.x) / proximityCollider.radius;
+        chaseVector.y = (myPlayer.transform.position.y - transform.position.y) / proximityCollider.radius;
     }
 
     protected void CheckBoundaries()
     {
-        if (Mathf.Abs(transform.position.y) > VerticalSpawnBoundary.Y  ) { Teleport(); transform.eulerAngles = new Vector3(0, 0, 0); }
-        if (Mathf.Abs(transform.position.x) > HorizontalSpawnBoundary.X) { Teleport(); transform.eulerAngles = new Vector3(0, 0, 0); }
+        if (Mathf.Abs(transform.position.y) > VerticalSpawnBoundary.Y  ) { Teleport(); chaseVector = Vector3.zero; }
+        if (Mathf.Abs(transform.position.x) > HorizontalSpawnBoundary.X) { Teleport(); chaseVector = Vector3.zero; }
     }
 }

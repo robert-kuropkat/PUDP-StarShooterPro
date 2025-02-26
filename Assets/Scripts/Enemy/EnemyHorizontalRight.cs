@@ -18,11 +18,10 @@ public class EnemyHorizontalRight : EnemyHorizontal
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn
-        //if (transform.position.x > (HorizontalSpawnBoundary.X)) { Teleport(); }
         CheckBoundaries();
     }
 
     protected override void MoveMe()
-    { transform.Translate(Vector3.right * (Time.deltaTime * mySpeed)); }
+    { transform.Translate((Vector3.right + chaseVector) * (Time.deltaTime * mySpeed)); }
 
 }

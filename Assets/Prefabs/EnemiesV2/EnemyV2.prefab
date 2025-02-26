@@ -431,7 +431,7 @@ MonoBehaviour:
   laserUpperTimer: 5
   explosionTimer: 2.4
   shieldAnim: {fileID: 1487117204}
-  impactCollider: {fileID: 163587892238632435}
+  proximityCollider: {fileID: 5959345710354396207}
   laserPrefab: {fileID: 1769212021685593957, guid: e7dc8ad5b558cd34798c0ee774d963fb,
     type: 3}
   ScreenBoundary:
@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 2225157004137234173}
   - component: {fileID: 5959345710354396207}
   - component: {fileID: 3660169082912434453}
-  - component: {fileID: 6660299067455824756}
+  - component: {fileID: 7417647564252138503}
   m_Layer: 0
   m_Name: Proximity Sensor
   m_TagString: Untagged
@@ -484,7 +484,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 315809277062838981}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -505,7 +505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f5cad0bcbaa6ba428542cf7cffd2598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!50 &6660299067455824756
+--- !u!50 &7417647564252138503
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0

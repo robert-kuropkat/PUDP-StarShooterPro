@@ -16,6 +16,7 @@ MonoBehaviour:
   laserUpperTimer: 5
   explosionTimer: 2.4
   shieldAnim: {fileID: 252599744387294888}
+  proximityCollider: {fileID: 5850936194779007251}
   laserPrefab: {fileID: 1769212021685593957, guid: e7dc8ad5b558cd34798c0ee774d963fb,
     type: 3}
   ScreenBoundary:
@@ -119,3 +120,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a3cf4698783eb64cb420ac5bf8568d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &5850936194779007251 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5959345710354396207, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
+    type: 3}
+  m_PrefabInstance: {fileID: 252599745320369468}
+  m_PrefabAsset: {fileID: 0}

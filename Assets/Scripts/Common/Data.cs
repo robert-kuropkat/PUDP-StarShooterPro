@@ -43,23 +43,28 @@ public struct WaveManager
     public int         _numberOfEnemyToSpawn;
     [Range(0,100), Tooltip("Perecentage of enemy to have protective shield.")]
     public int         _shieldedEnemyPercentage;
+    [Range(0,100), Tooltip("Perecentage of enemy to have aggressive (ramming) behavior.")]
+    public int         _aggressiveEnemyPercentage;
     [Tooltip("Create a new element for each object type to spawn in this wave.  This includes both enemy and powerups.")]
     public Spawnable[] _spawnableObjects;
     public WaveManager( int         numberOfEnemyToSpawn
                       , int         shieldedEnemyPercentage
+                      , int         aggressiveEnemyPercentage
                       , float[]     spawnRateRange
                       , Spawnable[] spawnableObjects
                       )
     {
-        _numberOfEnemyToSpawn    = numberOfEnemyToSpawn;
-        _shieldedEnemyPercentage = shieldedEnemyPercentage;
-        _spawnRateRange          = spawnRateRange;
-        _spawnableObjects        = spawnableObjects;
+        _numberOfEnemyToSpawn      = numberOfEnemyToSpawn;
+        _shieldedEnemyPercentage   = shieldedEnemyPercentage;
+        _aggressiveEnemyPercentage = aggressiveEnemyPercentage;
+        _spawnRateRange            = spawnRateRange;
+        _spawnableObjects          = spawnableObjects;
     }
-    public float[]     SpawnRateRange          { get { return _spawnRateRange;          } set { _spawnRateRange          = value; } }
-    public int         NumberOfEnemyToSpawn    { get { return _numberOfEnemyToSpawn;    } set { _numberOfEnemyToSpawn    = value; } }
-    public int         ShieldedEnemyPercentage { get { return _shieldedEnemyPercentage; } set { _shieldedEnemyPercentage = value; } }
-    public Spawnable[] SpawnableObjects        { get { return _spawnableObjects;        } set { _spawnableObjects        = value; } }
+    public float[]     SpawnRateRange            { get { return _spawnRateRange;            } set { _spawnRateRange            = value; } }
+    public int         NumberOfEnemyToSpawn      { get { return _numberOfEnemyToSpawn;      } set { _numberOfEnemyToSpawn      = value; } }
+    public int         ShieldedEnemyPercentage   { get { return _shieldedEnemyPercentage;   } set { _shieldedEnemyPercentage   = value; } }
+    public int         AggressiveEnemyPercentage { get { return _aggressiveEnemyPercentage; } set { _aggressiveEnemyPercentage = value; } }
+    public Spawnable[] SpawnableObjects          { get { return _spawnableObjects;          } set { _spawnableObjects          = value; } }
 }
 
 //

@@ -34,12 +34,11 @@ public class EnemyVertical : Enemy
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn at the top
-        //if (transform.position.y < -VerticalSpawnBoundary.Y) { Teleport(); }
         CheckBoundaries();
     }
 
     protected override void MoveMe()
-    { transform.Translate(Vector3.down * (Time.deltaTime * mySpeed)); }
+    { transform.Translate((Vector3.down + chaseVector) * (Time.deltaTime * mySpeed)); }
 
     protected override void Teleport()
     { transform.position = SpawnPosition; }

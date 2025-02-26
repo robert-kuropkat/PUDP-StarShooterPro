@@ -123,6 +123,10 @@ public class SpawnManager : MonoBehaviour
                && Random.Range(0f,100f)     <= currentWave.ShieldedEnemyPercentage 
                )
                { newSpawnable.GetComponent<Enemy>().ActivateShield(); }
+            if (CurrentSpawnadObject.Type == SpawnableTypes.Enemy
+               && Random.Range(0f, 100f) <= currentWave.AggressiveEnemyPercentage
+               )
+            { newSpawnable.GetComponent<Enemy>().ActivateAgression(); }
 
             yield return new WaitForSeconds(Random.Range( currentWave.SpawnRateRange[0]
                                                         , currentWave.SpawnRateRange[1]));

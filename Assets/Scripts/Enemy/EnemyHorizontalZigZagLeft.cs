@@ -21,7 +21,6 @@ public class EnemyHorizontalZigZagLeft : EnemyHorizontalZigZag
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn
-        //if (transform.position.x < -(HorizontalSpawnBoundary.X)) { Teleport(); }
         CheckBoundaries();
     }
 
