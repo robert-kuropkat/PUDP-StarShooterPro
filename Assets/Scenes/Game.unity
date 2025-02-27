@@ -781,7 +781,7 @@ MonoBehaviour:
     - 5
     _numberOfEnemyToSpawn: 5
     _shieldedEnemyPercentage: 0
-    _aggressiveEnemyPercentage: 0
+    _aggressiveEnemyPercentage: 100
     _spawnableObjects:
     - _prefab: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}
@@ -818,7 +818,7 @@ MonoBehaviour:
     - 5
     _numberOfEnemyToSpawn: 8
     _shieldedEnemyPercentage: 0
-    _aggressiveEnemyPercentage: 0
+    _aggressiveEnemyPercentage: 100
     _spawnableObjects:
     - _prefab: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}

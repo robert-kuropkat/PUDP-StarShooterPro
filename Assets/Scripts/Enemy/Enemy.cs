@@ -162,6 +162,19 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
         chaseVector.y = (myPlayer.transform.position.y - transform.position.y) / proximityCollider.radius;
     }
 
+    public void DuckAndDodge()
+    {
+        chaseVector.x = -(myPlayer.transform.position.x - transform.position.x);
+        StartCoroutine(ResetDuckAndDodge());
+        //chaseVector.y = (myPlayer.transform.position.y - transform.position.y) / proximityCollider.radius;
+    }
+
+    IEnumerator ResetDuckAndDodge()
+    {
+        yield return new WaitForSeconds(3);
+        chaseVector.x = 0;
+    }
+
     protected void CheckBoundaries()
     {
         if (Mathf.Abs(transform.position.y) > VerticalSpawnBoundary.Y  ) { Teleport(); chaseVector = Vector3.zero; }
