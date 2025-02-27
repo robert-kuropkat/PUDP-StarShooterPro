@@ -15,8 +15,16 @@ public class PowerUp : MonoBehaviour, ISpawnable
     [SerializeField] private AudioClip myStealMeClip;
 
     //
+    // Game Objects non-Serialized objects are populated in code
+    //
+
+    private Player myPlayer;
+
+    //
     // Properties
     //
+    protected Vector3 chaseVector = Vector3.zero;
+
     [SerializeField] private float mySpeed = 3f;
     public float MySpeed { get { return mySpeed; } set { mySpeed = value; } }
 
@@ -50,11 +58,14 @@ public class PowerUp : MonoBehaviour, ISpawnable
 
     private void NullCheckOnStartup()
     {
+        if (myPlayer    == null) { Debug.LogError("The Player is NULL."); }
         if (myAudioClip == null) { Debug.LogError("Audio Clip is NULL"); }
     }
 
     private void Start()                            
     {
+        myPlayer = GameObject.Find("Player").GetComponent<Player>();
+
         NullCheckOnStartup();
         transform.position = SpawnPosition;
         transform.rotation = Quaternion.identity;
@@ -79,7 +90,11 @@ public class PowerUp : MonoBehaviour, ISpawnable
     //
 
     private void MoveMe()
-        { transform.Translate(Vector3.down * Time.deltaTime * mySpeed); }
+    {
+        chaseVector = Vector3.zero;
+        if (Input.GetKey(KeyCode.C)) { ChasePlayer(); }
+        transform.Translate((Vector3.down + chaseVector) * Time.deltaTime * mySpeed); 
+    }
 
     private void CollectMe()
     {
@@ -91,6 +106,14 @@ public class PowerUp : MonoBehaviour, ISpawnable
     {
         AudioSource.PlayClipAtPoint(myStealMeClip, Camera.main.transform.position, 1f);
         Destroy(this.gameObject);
+    }
+
+    public void ChasePlayer()
+    {
+        chaseVector.x = (myPlayer.transform.position.x - transform.position.x);
+        chaseVector.y = (myPlayer.transform.position.y - transform.position.y);
+        //chaseVector.x = (myPlayer.transform.position.x - transform.position.x) / proximityCollider.radius;
+        //chaseVector.y = (myPlayer.transform.position.y - transform.position.y) / proximityCollider.radius;
     }
 
 }
