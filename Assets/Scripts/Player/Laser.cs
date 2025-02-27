@@ -26,7 +26,7 @@ public class Laser : MonoBehaviour
     {
         myPlayer = GameObject.Find("Player").GetComponent<Player>();
 
-        SetEnemyLaserDirection();
+        SetEnemyLaserDirection();  // if not shooting at powerup
         PutInContainer();
         Destroy(this.gameObject, myTimeOut); 
     }

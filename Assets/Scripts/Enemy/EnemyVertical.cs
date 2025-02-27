@@ -34,6 +34,7 @@ public class EnemyVertical : Enemy
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn at the top
+        ScanForPowerUps();
         CheckBoundaries();
     }
 

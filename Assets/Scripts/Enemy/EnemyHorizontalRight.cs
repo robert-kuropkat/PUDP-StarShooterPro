@@ -18,6 +18,7 @@ public class EnemyHorizontalRight : EnemyHorizontal
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn
+        ScanForPowerUps();
         CheckBoundaries();
     }
 

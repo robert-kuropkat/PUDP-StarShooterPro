@@ -933,7 +933,7 @@ MonoBehaviour:
     - _prefab: {fileID: 163587892238632399, guid: 8100d1d11f5b6f24e8041ecaa6a8b1a3,
         type: 3}
       _weight: 10
-      _movementSpeed: 0
+      _movementSpeed: 4
       _name: 0
       _type: 0
     - _prefab: {fileID: 2558803057182059233, guid: c113e754cb06b0049b5632014254dee9,

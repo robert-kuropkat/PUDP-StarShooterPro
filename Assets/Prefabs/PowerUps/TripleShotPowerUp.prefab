@@ -97,8 +97,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31fb85d7bc61b5f4fba989f226ce6143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mySpeed: 3
+  myTimeOut: 5
   myAudioClip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  myStealMeClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
+  mySpeed: 3
+  ScreenBoundary:
+    _x: 9.5
+    _y: 6
+  VerticalSpawnBoundary:
+    _x: 8.5
+    _y: 8
 --- !u!58 &7534344077676335773
 CircleCollider2D:
   m_ObjectHideFlags: 0

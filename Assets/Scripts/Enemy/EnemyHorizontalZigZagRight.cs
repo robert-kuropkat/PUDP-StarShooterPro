@@ -21,6 +21,7 @@ public class EnemyHorizontalZigZagRight : EnemyHorizontalZigZag
     {
         MoveMe();
         if (ImDead) { return; }           // ensure an exploding enemy does not respawn
+        ScanForPowerUps();
         CheckBoundaries();
     }
 

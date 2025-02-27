@@ -12,6 +12,7 @@ public class PowerUp : MonoBehaviour, ISpawnable
     // Game Objects populated in Inspector
     //
     [SerializeField] private AudioClip myAudioClip;
+    [SerializeField] private AudioClip myStealMeClip;
 
     //
     // Properties
@@ -68,7 +69,10 @@ public class PowerUp : MonoBehaviour, ISpawnable
     //
 
     private void OnTriggerEnter2D(Collider2D other)
-        { if ( other.tag == "Player" )  { CollectMe(); } }
+    { 
+        if ( other.tag == "Player" )      { CollectMe(); return; } 
+        if ( other.tag == "Enemy Laser")  { StealMe(); return; } 
+    }
 
     //
     // Helper Methods           ============================================================
@@ -80,6 +84,12 @@ public class PowerUp : MonoBehaviour, ISpawnable
     private void CollectMe()
     {
         AudioSource.PlayClipAtPoint(myAudioClip, Camera.main.transform.position, 1f);
+        Destroy(this.gameObject);
+    }
+
+    private void StealMe()
+    {
+        AudioSource.PlayClipAtPoint(myStealMeClip, Camera.main.transform.position, 1f);
         Destroy(this.gameObject);
     }
 

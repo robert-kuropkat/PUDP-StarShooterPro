@@ -20,6 +20,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     [SerializeField] private float laserLowerTimer = 2.0f;
     [SerializeField] private float laserUpperTimer = 5.0f;
     [SerializeField] private float explosionTimer  = 2.4f;
+    //[SerializeField] private bool  powerUpDetected = false;
 
     //
     // Game Objects populated in Inspector
@@ -40,6 +41,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //
     protected Vector3 chaseVector = Vector3.zero;
     protected bool ImDead { get; set; } = false;
+    protected bool PowerUpDetected { get; set; } = false;
 
     [SerializeField] protected Boundary ScreenBoundary          = new Boundary( 9.5f, 6.0f);
     [SerializeField] protected Boundary HorizontalSpawnBoundary = new Boundary(11.5f, 5.0f);
@@ -64,7 +66,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     { 
         myPlayer           = GameObject.Find("Player").GetComponent<Player>();
         myExplosion_anim   = GetComponent<Animator>();
-        
+
         //DeactivateAgression();
         NullCheckOnStartup();
         StartCoroutine(FireLaser());
@@ -107,6 +109,15 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
             }
             yield return new WaitForSeconds(Random.Range(laserLowerTimer, laserUpperTimer));
         }
+    }
+
+    IEnumerator FireOnce()
+    {
+        Instantiate( laserPrefab
+                   , transform.position
+                   , Quaternion.identity);
+        yield return new WaitForSeconds(3);
+        PowerUpDetected = false;
     }
 
     //
@@ -155,5 +166,24 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     {
         if (Mathf.Abs(transform.position.y) > VerticalSpawnBoundary.Y  ) { Teleport(); chaseVector = Vector3.zero; }
         if (Mathf.Abs(transform.position.x) > HorizontalSpawnBoundary.X) { Teleport(); chaseVector = Vector3.zero; }
+    }
+
+    protected void ScanForPowerUps()
+    {
+        if (PowerUpDetected) { return; }
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position - new Vector3(0, 2, 0), Vector3.down);
+        if (hit && hit.transform.tag.Contains("PU")) 
+            {
+            float distance = Mathf.Abs(hit.point.y - transform.position.y);
+            PowerUpDetected = true;
+            FireOnce();
+            //Debug.DrawRay(transform.position - new Vector3(0,2,0), Vector3.down * 5, Color.yellow); 
+            //Debug.Log("PowerUP detected: " + hit.transform.tag); 
+        }
+        //else
+        //    {
+        //    Debug.DrawRay(transform.position, Vector3.down * 5, Color.yellow); 
+        //    Debug.Log("Nothing detected"); }
     }
 }
