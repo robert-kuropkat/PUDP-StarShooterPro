@@ -299,7 +299,7 @@ public class Player : MonoBehaviour
         //
         //  Move to a method call instead and keep it internal to GameManager
         //
-        gameManager.CurrentEnemyCount--;
+        GameManager.CurrentEnemyCount--;
         uiManager.NewScore(playerScore);
     }
 

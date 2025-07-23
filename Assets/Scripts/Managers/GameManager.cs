@@ -44,8 +44,8 @@ public class GameManager : MonoBehaviour
         set { currentWave = value; }
     }
 
-    [SerializeField] private int currentEnemyCount = 0;
-    public int CurrentEnemyCount
+    [SerializeField] private static int currentEnemyCount = 0;
+    public static int CurrentEnemyCount
     {
         get { return currentEnemyCount; }
         set { currentEnemyCount = value; }

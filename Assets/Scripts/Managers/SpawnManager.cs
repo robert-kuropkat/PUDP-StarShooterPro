@@ -59,7 +59,7 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnBossWave()
     {
-        gameManager.CurrentEnemyCount += 1;
+        GameManager.CurrentEnemyCount += 1;
         gameManager.WaveOver = false;
         enemyBoss.gameObject.SetActive(true);
         enemyBoss.ChangeStateWithDelay(1f, BossState.Enter);
@@ -110,7 +110,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator SpawnRoutine()
     {
-        gameManager.CurrentEnemyCount += currentWave.NumberOfEnemyToSpawn;
+        GameManager.CurrentEnemyCount += currentWave.NumberOfEnemyToSpawn;
         gameManager.WaveOver           = false;
 
         int index;
@@ -153,8 +153,8 @@ public class SpawnManager : MonoBehaviour
         {
             for (int i=0;i<5;i++)
             {
-                gameManager.CurrentEnemyCount++;
-                gameManager.CurrentEnemyCount++;
+                GameManager.CurrentEnemyCount++;
+                GameManager.CurrentEnemyCount++;
                 Instantiate(enemyMinionLeft , enemyContainer.transform);
                 Instantiate(enemyMinionRight, enemyContainer.transform);
                 yield return new WaitForSeconds(.5f);
