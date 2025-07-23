@@ -52,7 +52,7 @@ public class EnemyHorizontalZigZag : EnemyHorizontal
 
     IEnumerator ChangeDirection()
     {
-        while (true)
+        while (!ImDead)
         {
             changeDirection = changeDirection ? false : true;
             DropDepthCharge();

@@ -15,15 +15,19 @@ public class UIManager : MonoBehaviour
     //
     [SerializeField] private TMP_Text    scoreText;
     [SerializeField] private TMP_Text    ammoText;
+    [SerializeField] private TMP_Text    tripleShotText;
+    [SerializeField] private TMP_Text    torpedoText;
+    [SerializeField] private TMP_Text    spiralText;
     [SerializeField] private TMP_Text    gameOverText;
     [SerializeField] private TMP_Text    restartText;
     [SerializeField] private Image       livesImage;
-    [SerializeField] private Image       spiralLaserImage;
+    [SerializeField] private Image       spiralShotImage;
     [SerializeField] private Sprite[]    livesSprites;
     [SerializeField] private Sprite[]    spiralSprites;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private Slider      thrusterGuage;
     [SerializeField] private Color       thrusterGuageColor = Color.cyan;
+    [SerializeField] private Color       defaultTextColor   = new Color(147,171,241);
 
     //
     // Game Control             ============================================================
@@ -33,10 +37,12 @@ public class UIManager : MonoBehaviour
     {
         if (scoreText        == null) { Debug.LogError("Score Text is NULL"); }
         if (ammoText         == null) { Debug.LogError("Ammo Text is NULL"); }
+        if (torpedoText      == null) { Debug.LogError("Torpedo Text is NULL"); }
+        if (spiralText       == null) { Debug.LogError("Spiral Text is NULL"); }
         if (gameOverText     == null) { Debug.LogError("Game Over Text is NULL"); }
         if (restartText      == null) { Debug.LogError("Game Restart Text is NULL"); }
         if (livesImage       == null) { Debug.LogError("Lives Image is NULL"); }
-        if (spiralLaserImage == null) { Debug.LogError("Spiral Laser Image is NULL"); }
+        if (spiralShotImage  == null) { Debug.LogError("Spiral Shot Image is NULL"); }
         if (gameManager      == null) { Debug.LogError("Game Manager is NULL"); }
         // Sprite Array check
     }
@@ -54,16 +60,30 @@ public class UIManager : MonoBehaviour
     // Public Methods           ============================================================
     //
 
-    public void NewScore(int score)      
-        { scoreText.text = "Score : " + score; }
-
-    public void AmmoCount(int count)
-        { ammoText.text = "Ammo: " + count; }
+    public void NewScore(int score)         { scoreText.text      = $"{score}"; }
+    public void AmmoCount(int count)        { ammoText.text       = $"{count}"; }
+    public void TripleShotCount(int count)  { tripleShotText.text = $"{count}"; }
+    public void TorpedoCount(int count)     { torpedoText.text    = $"{count}"; }
+    public void SpiralLaserCount(int count) { spiralText.text     = $"{count}"; }
 
     public void CurrentLives (int lives) 
     { 
         if ( lives >= 0 && lives <  livesSprites.Length ) 
            { livesImage.sprite = livesSprites[lives]; }
+    }
+
+    public void ArmLaser()          { ammoText.color       = Color.green; }
+    public void ArmTripleShot()     { tripleShotText.color = Color.green; }
+    public void ArmTorpedo()        { torpedoText.color    = Color.green; }
+    public void ArmSpiralLaser()    { spiralText.color     = Color.green; spiralShotImage.sprite = spiralSprites[1]; }
+    public void DisArmLaser()       { ammoText.color       = defaultTextColor; }
+    public void DisArmTripleShot()  { tripleShotText.color = defaultTextColor; }
+    public void DisArmTorpedo()     { torpedoText.color    = defaultTextColor; }
+    public void DisArmSpiralLaser() 
+    {
+        spiralText.color        = defaultTextColor;
+        spiralShotImage.sprite = spiralSprites[0];
+        spiralShotImage.gameObject.SetActive(true);
     }
 
     public void UpdateThrusterGuage(int currentSpeed)
@@ -95,20 +115,16 @@ public class UIManager : MonoBehaviour
 
     public void EnableSpiralLaser()
     {
-        spiralLaserImage.sprite = spiralSprites[0];
-        spiralLaserImage.gameObject.SetActive(true); 
+        spiralShotImage.sprite = spiralSprites[0];
+        spiralShotImage.gameObject.SetActive(true); 
     }
 
-    public void ArmSpiralLaser()
-    {
-        spiralLaserImage.sprite = spiralSprites[1];
-    }
+    //public void ArmSpiralLaser()
+    //{
+    //    spiralLaserImage.sprite = spiralSprites[1];
+    //}
 
-    public void DisableSpiralLaser()
-    {
-        spiralLaserImage.sprite = spiralSprites[0];
-        spiralLaserImage.gameObject.SetActive(false); 
-    }
+    public void DisableSpiralLaser() { DisArmSpiralLaser(); }
 
     public void StartNewWave()
     {
@@ -121,8 +137,16 @@ public class UIManager : MonoBehaviour
 
     private void InitializeGame()
     {
+        AmmoCount(Laser.Count);
+        TripleShotCount(TripleShot.Count);
+        TorpedoCount(Torpedo.Count);
+        SpiralLaserCount(SpiralShot.Count);
+        DisArmTripleShot();
+        DisArmTorpedo();
+        DisArmSpiralLaser();
+        ArmLaser();
         gameOverText.gameObject.SetActive(false);
-        scoreText.text = "Score: 0";
+        scoreText.text = "0";
     }
 
     //

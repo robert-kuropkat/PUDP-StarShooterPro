@@ -5,6 +5,23 @@
 // Enumerations
 //
 
+public enum BossState
+{
+      None
+    , Enter
+    , Threaten
+    , Return
+    , Hover
+    , Attack
+}
+public enum MinionPattern
+{
+      Pattern_1
+    , Pattern_2
+    , Pattern_3
+    , Pattern_4
+    , Reset
+}
     
 public enum SpawnableTypes
 {
@@ -28,6 +45,13 @@ public enum SpwanableNames
    , NegativeAmmo
 }
 
+public enum WeaponTypes
+{
+     Laser
+   , TripleShot
+   , Torpedo
+   , Spiral
+}
 
 //
 // Data Structures
@@ -37,6 +61,7 @@ public enum SpwanableNames
 [System.Serializable]
 public struct WaveManager
 {
+    public string      _waveName;
     [Tooltip("High and Low value in seconds to spawn next game object.  Array size should be 2.  Element 0 is the lower range, Element 1 the upper.  Values are floats.")]
     public float[]     _spawnRateRange;
     [Tooltip("Total number of enemy ships to spawn, regardless of type.")]
@@ -47,19 +72,22 @@ public struct WaveManager
     public int         _aggressiveEnemyPercentage;
     [Tooltip("Create a new element for each object type to spawn in this wave.  This includes both enemy and powerups.")]
     public Spawnable[] _spawnableObjects;
-    public WaveManager( int         numberOfEnemyToSpawn
+    public WaveManager( string      waveName
+                      , int         numberOfEnemyToSpawn
                       , int         shieldedEnemyPercentage
                       , int         aggressiveEnemyPercentage
                       , float[]     spawnRateRange
                       , Spawnable[] spawnableObjects
                       )
     {
+        _waveName                  = waveName;
         _numberOfEnemyToSpawn      = numberOfEnemyToSpawn;
         _shieldedEnemyPercentage   = shieldedEnemyPercentage;
         _aggressiveEnemyPercentage = aggressiveEnemyPercentage;
         _spawnRateRange            = spawnRateRange;
         _spawnableObjects          = spawnableObjects;
     }
+    public string      WaveName                  { get { return _waveName;                  } set { _waveName                  = value; } }
     public float[]     SpawnRateRange            { get { return _spawnRateRange;            } set { _spawnRateRange            = value; } }
     public int         NumberOfEnemyToSpawn      { get { return _numberOfEnemyToSpawn;      } set { _numberOfEnemyToSpawn      = value; } }
     public int         ShieldedEnemyPercentage   { get { return _shieldedEnemyPercentage;   } set { _shieldedEnemyPercentage   = value; } }

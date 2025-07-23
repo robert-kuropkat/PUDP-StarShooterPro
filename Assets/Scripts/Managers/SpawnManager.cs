@@ -15,6 +15,9 @@ public class SpawnManager : MonoBehaviour
     [Tooltip("Create a new element for each distinct wave.")]
     [SerializeField] private WaveManager[] waveManager;
     [SerializeField] private int[]         spawnWeight;
+    [SerializeField] private EnemyMinion   enemyMinionLeft;
+    [SerializeField] private EnemyMinion   enemyMinionRight;
+    [SerializeField] private Boss          enemyBoss;
 
     //
     // Properties
@@ -54,6 +57,15 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    private void SpawnBossWave()
+    {
+        gameManager.CurrentEnemyCount += 1;
+        gameManager.WaveOver = false;
+        enemyBoss.gameObject.SetActive(true);
+        enemyBoss.ChangeStateWithDelay(1f, BossState.Enter);
+        StartCoroutine(SpawnMinions());
+    }
+
     //
     // Wave Managers             ============================================================
     // 
@@ -61,6 +73,7 @@ public class SpawnManager : MonoBehaviour
     private void SpawnWave()
     {
         gameManager.CurrentWave++;
+        if (gameManager.CurrentWave > 4) { SpawnBossWave(); return; }
         SetSpawnWeight();
         StartCoroutine(SpawnRoutine());
     }
@@ -130,6 +143,23 @@ public class SpawnManager : MonoBehaviour
 
             yield return new WaitForSeconds(Random.Range( currentWave.SpawnRateRange[0]
                                                         , currentWave.SpawnRateRange[1]));
+        }
+    }
+
+    private IEnumerator SpawnMinions()
+    {
+        yield return new WaitForSeconds(5);
+        while (!gameManager.WaveOver)
+        {
+            for (int i=0;i<5;i++)
+            {
+                gameManager.CurrentEnemyCount++;
+                gameManager.CurrentEnemyCount++;
+                Instantiate(enemyMinionLeft , enemyContainer.transform);
+                Instantiate(enemyMinionRight, enemyContainer.transform);
+                yield return new WaitForSeconds(.5f);
+            }
+            yield return new WaitForSeconds(20);
         }
     }
 

@@ -31,7 +31,10 @@ public class GameManager : MonoBehaviour
     public bool WaveOver
     {
         get { return waveOver; }
-        set { waveOver = value; }
+        set { 
+              if (CurrentWave > 5) { GameOver = true;  } 
+              else                 { waveOver = value; }
+            }
     }
 
     [SerializeField] private int currentWave = 0;

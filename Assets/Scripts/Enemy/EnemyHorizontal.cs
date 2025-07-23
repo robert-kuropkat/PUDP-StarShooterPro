@@ -17,7 +17,7 @@ public class EnemyHorizontal : Enemy
 
     [SerializeField] protected float mySpeed = 4.0f;
     public override float MySpeed { get { return mySpeed; } set { mySpeed = value; } }
-    protected override Vector3 MoveDirection { get; set; }
+    //protected override Vector3 MoveDirection { get; set; }
 
 
     //

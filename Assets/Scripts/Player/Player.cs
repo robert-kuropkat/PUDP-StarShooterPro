@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int          speedUp           = 1;
     [SerializeField] private float        speedUpTimer      = 5f;
     [SerializeField] private float        leftRightBoundary = 11.2f;
-    [SerializeField] private float        topBoundary       = 0;
+    [SerializeField] private float        topBoundary       = 5;
     [SerializeField] private float        bottomBoundary    = -4;
     [SerializeField] private float        ThrusterIncrease  = 1.1f;
     //
@@ -35,25 +35,87 @@ public class Player : MonoBehaviour
     // Properties
     //
 
-    private bool PlayerHasEnabled360Laser
+    //
+    // 1. Weapon must be enabled befor eit can be armed.  Weapons should be Disabled when inventory is 0
+    // 2. If weapon is enabled, it can be armed with the correct keypress and return a value of true.
+    // 3. If weapon is disabled, or if the associated key is not being pressed, a value of false is returned.
+    //
+    // This does require knowlege of the available weapons be magically hidden here in the player, so I don't 
+    //   like it much.  Need to think it through...
+    //
+    private bool PlayerHasArmedLaser
     {
         get
         {
-            if (!myWeapons.Laser360Enabled) { return false; }
-            if (  Input.GetKeyDown(KeyCode.LeftAlt )
-               || Input.GetKeyDown(KeyCode.RightAlt))
+            
+            //if (!myWeapons.LaserEnabled)          { return false; }
+            if (!Laser.Enabled)                   { return false; }
+            if (Input.GetKeyDown(KeyCode.Alpha1)) 
             {
-                return true;
-            } else { return false; }
+                //myWeapons.DisarmWeapons();
+                Debug.Log("Laser Armed"); return true;  
+            }
+            return false;
         }
     }
-    private bool PlayerHasFired  
-        { get {
-                if (  Input.GetKeyDown(KeyCode.Space) 
-                   && playerLives > 0) { return true; } 
-                return false;
-              } 
+
+    private  bool PlayerHasArmedTripleShot
+    {
+        get
+        {
+            
+            //if (!myWeapons.TripelShotEnabled)        { return false; }
+            if (!TripleShot.Enabled)                 { return false; }
+            if (Input.GetKeyDown(KeyCode.Alpha2)) 
+            {
+                //myWeapons.DisarmWeapons();
+                Debug.Log("TripleShot Armed"); return true;  
+            }
+            return false;
         }
+    }
+
+    private bool PlayerHasArmedTorpedo
+    {
+        get
+        {
+
+            //if (!myWeapons.TorpedoEnabled)        { return false; }
+            if (!Torpedo.Enabled) { return false; }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                //myWeapons.DisarmWeapons();
+                Debug.Log("Torpedo Armed"); return true;
+            }
+            return false;
+        }
+    }
+
+    private bool PlayerHasArmedSpiralShot
+    {
+        get
+        {
+            
+            //if (!myWeapons.Laser360Enabled)       { return false; }
+            if (!SpiralShot.Enabled)              { return false; }
+            if (Input.GetKeyDown(KeyCode.Alpha4)) 
+            {
+                //myWeapons.DisarmWeapons();
+                Debug.Log("Spiral Armed"); return true; 
+            }
+            return false;
+        }
+    }
+
+    private bool PlayerHasFired  
+    { 
+        get 
+        {
+            if (  Input.GetKeyDown(KeyCode.Space) 
+               && playerLives > 0) { return true; } 
+            return false;
+        } 
+    }
 
     private int ChooseGoodEngine  // The engine fire animations are stored in an array
     {                             // This property randomizes which one is chosen first
@@ -101,6 +163,11 @@ public class Player : MonoBehaviour
     {
         NullCheckOnStartup();
         transform.position = new Vector3(0, 0, 0);
+
+        Laser.Enabled = true;
+        //TripleShot.Enabled = true;
+        //Torpedo.Enabled = true;
+        //SpiralShot.Enabled = true;
     }
 
     private void Update()
@@ -108,24 +175,28 @@ public class Player : MonoBehaviour
         MovePlayer();
         CheckBoundaries();
 
-        if (PlayerHasEnabled360Laser) { myWeapons.ArmSpiralLaser(); }
-        if (PlayerHasFired) { myWeapons.FireWeapon(); }
+        if (PlayerHasArmedLaser)      { myWeapons.ArmLaser(); }
+        if (PlayerHasArmedTripleShot) { myWeapons.ArmTripleShot(); }
+        if (PlayerHasArmedSpiralShot) { myWeapons.ArmSpiralShot(); }
+        if (PlayerHasArmedTorpedo)    { myWeapons.ArmTorpedo(); }
+        
+        if (PlayerHasFired)           { myWeapons.FireWeapon(); }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         switch (other.tag)
         {
+            //
+            //  Use new Enum here...
+            //
             case "Enemy":
                 TakeDamage();
                 break;
             case "Enemy Laser":
-                if (other.transform.parent.GetComponent<EnemyFire>().HasHit) { return; }
+                if (other.transform.parent.GetComponent<EnemyFire>().HasHit) { return; }  /// probable when I put it into a container.
                 other.transform.parent.GetComponent<EnemyFire>().HasHit = true;
                 TakeDamage();
-                break;
-            case "TripleShotPU":
-                if (!myWeapons.TripleShotEnabled) { myWeapons.TripleShotEnabled = true; }
                 break;
             case "SpeedPU":
                 if (speedUp == 1) { StartCoroutine(PowerUpSpeed()); }
@@ -133,14 +204,23 @@ public class Player : MonoBehaviour
             case "ShieldPU":
                 if (!shieldAnim.IsActive) { shieldAnim.IsActive = true; }
                 break;
+            case "HealthPU":
+                if (playerLives < 3) { CollectHealth(); }
+                break;
+            
             case "AmmoPU":
                 myWeapons.CollectAmmo();
                 break;
-            case "HealthPU":
-                if (playerLives < 3) { CollectHealth();  }
+            case "TripleShotPU":
+                //if (!myWeapons.TripleShotEnabled) { myWeapons.TripleShotEnabled = true; }
+                myWeapons.CollectTripelShot();
+                break;
+            case "TorpedoPU":
+                myWeapons.CollectTorpedo();
                 break;
             case "SpiralPU":
-                myWeapons.Laser360Enabled = true;
+                //myWeapons.Laser360Enabled = true;
+                myWeapons.CollectSpiralShot();
                 break;
             case "NegativeAmmoPU":
                 myWeapons.ReduceAmmo();
@@ -209,6 +289,16 @@ public class Player : MonoBehaviour
     public void EnemyDestroyed()
     {
         playerScore++;
+        //
+        //  I think this is causing a race condition when two enemy are destroyed
+        //  at the same-ish time.  They each pull the same current value so only 
+        //  one actually deducts.
+        //
+        //  Discovered the Current Enemy Count manages to go to -1 which it should
+        //  not do...
+        //
+        //  Move to a method call instead and keep it internal to GameManager
+        //
         gameManager.CurrentEnemyCount--;
         uiManager.NewScore(playerScore);
     }

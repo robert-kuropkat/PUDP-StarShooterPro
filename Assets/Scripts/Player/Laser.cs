@@ -5,18 +5,41 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
     //
+    // Static data
+    //
+
+    [SerializeField] private static int count = 26;
+    public static int Count
+    {
+        get { return count; }
+        set
+        {
+            count = value;
+            count = (count < 0) ? 0 : count;
+        }
+    }
+
+    public static bool Enabled { get; set; } = true;
+    public static bool Armed   { get; set; } = true;
+
+    // ============================================================
+
+    //
     // Speed and Timers
     //
     [SerializeField] private float mySpeed         = 8.0f;
     [SerializeField] private float myTimeOut       = 3f;
     [SerializeField] private float rearLaserOffset = 2.5f;
+    //[SerializeField] private int   ammoStartCount  = 26;
 
     private int laserDirection = 1;
+
 
     //
     // Game Objects non-Serialized objects populated in code
     //
-    private Player myPlayer;
+    private Player    myPlayer;
+    private UIManager uiManager;
 
     //
     // Game Control             ============================================================
@@ -24,10 +47,12 @@ public class Laser : MonoBehaviour
 
     private void Start()  
     {
-        myPlayer = GameObject.Find("Player").GetComponent<Player>();
+        myPlayer  = GameObject.Find("Player").GetComponent<Player>();
+        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
         SetEnemyLaserDirection();  // if not shooting at powerup
         PutInContainer();
+        uiManager.AmmoCount(Laser.Count);
         Destroy(this.gameObject, myTimeOut); 
     }
 
@@ -73,8 +98,7 @@ public class Laser : MonoBehaviour
     private void PutInContainer()
     {
         GameObject weaponsContainer = GameObject.FindGameObjectWithTag("Weapons Container");
-        if (  weaponsContainer      != null
-           && this.transform.parent == null ) { transform.parent = weaponsContainer.transform; }
+        //transform.parent            = weaponsContainer?.transform;
     }
 
 }

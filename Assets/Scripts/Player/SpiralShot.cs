@@ -5,6 +5,24 @@ using UnityEngine;
 public class SpiralShot : MonoBehaviour
 {
     //
+    // Static data
+    //
+    [SerializeField] private static int count;
+    public static int Count
+    {
+        get { return count; }
+        set
+        {
+            count = value;
+            count = (count < 0) ? 0 : count;
+        }
+    }
+    public static bool Enabled { get; set; } = false;
+    public static bool Armed   { get; set; } = false;
+
+    // ============================================================
+
+    //
     // Timers
     //
     [SerializeField] private float myTimeOut = 3f;
@@ -26,6 +44,6 @@ public class SpiralShot : MonoBehaviour
     private void PutInContainer()
     {
         GameObject weaponsContainer = GameObject.FindGameObjectWithTag("Weapons Container");
-        if (weaponsContainer != null) { transform.parent = weaponsContainer.transform; }
+        transform.parent            = weaponsContainer?.transform;
     }
 }

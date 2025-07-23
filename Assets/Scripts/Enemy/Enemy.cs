@@ -9,7 +9,7 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //
     abstract public    float   MySpeed { get; set; }
     abstract protected Vector3 SpawnPosition { get; }
-    abstract protected Vector3 MoveDirection { get; set; }
+    //abstract protected Vector3 MoveDirection { get; set; }
     abstract protected void    MoveMe();
     abstract protected void    Update();
     abstract protected void    Teleport();
@@ -127,10 +127,10 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     private void EnemyDeathScene()
     {
         if (shieldAnim.IsActive) { return; }
+        NotifyPlayer();
         ImDead = true; // Flag to short circuit respawning in Update()
         DisableCollisionComponenets();
         TriggerExplosion();
-        NotifyPlayer();
         Destroy(this.gameObject, explosionTimer);
     }
 
