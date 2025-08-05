@@ -9,7 +9,6 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //
     abstract public    float   MySpeed { get; set; }
     abstract protected Vector3 SpawnPosition { get; }
-    //abstract protected Vector3 MoveDirection { get; set; }
     abstract protected void    MoveMe();
     abstract protected void    Update();
     abstract protected void    Teleport();
@@ -20,7 +19,6 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     [SerializeField] private float laserLowerTimer = 2.0f;
     [SerializeField] private float laserUpperTimer = 5.0f;
     [SerializeField] private float explosionTimer  = 2.4f;
-    //[SerializeField] private bool  powerUpDetected = false;
 
     //
     // Game Objects populated in Inspector
@@ -52,14 +50,10 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     //
     private void NullCheckOnStartup()
     {
-        //
-        //  ToDo: Make sure we are checking everything we should here...
-        //
         if (myPlayer         == null) { Debug.LogError("The Player is NULL."); }
         if (laserPrefab      == null) { Debug.LogError("The Enemy Laser Prefab is NULL."); }
         if (myExplosion_anim == null) { Debug.LogError("The Explosion Animator is NULL."); }
         if (shieldAnim       == null) { Debug.LogError("The Shield Animation is NULL"); }
-
     }
 
     protected virtual void Start() 
@@ -67,7 +61,6 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
         myPlayer           = GameObject.Find("Player").GetComponent<Player>();
         myExplosion_anim   = GetComponent<Animator>();
 
-        //DeactivateAgression();
         NullCheckOnStartup();
         StartCoroutine(FireLaser());
     }
@@ -166,7 +159,6 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
     {
         chaseVector.x = -(myPlayer.transform.position.x - transform.position.x);
         StartCoroutine(ResetDuckAndDodge());
-        //chaseVector.y = (myPlayer.transform.position.y - transform.position.y) / proximityCollider.radius;
     }
 
     IEnumerator ResetDuckAndDodge()
@@ -191,12 +183,6 @@ public abstract class Enemy : MonoBehaviour, ISpawnable
             float distance = Mathf.Abs(hit.point.y - transform.position.y);
             PowerUpDetected = true;
             FireOnce();
-            //Debug.DrawRay(transform.position - new Vector3(0,2,0), Vector3.down * 5, Color.yellow); 
-            //Debug.Log("PowerUP detected: " + hit.transform.tag); 
         }
-        //else
-        //    {
-        //    Debug.DrawRay(transform.position, Vector3.down * 5, Color.yellow); 
-        //    Debug.Log("Nothing detected"); }
     }
 }

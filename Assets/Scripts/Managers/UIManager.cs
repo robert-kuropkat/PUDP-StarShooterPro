@@ -44,7 +44,6 @@ public class UIManager : MonoBehaviour
         if (livesImage       == null) { Debug.LogError("Lives Image is NULL"); }
         if (spiralShotImage  == null) { Debug.LogError("Spiral Shot Image is NULL"); }
         if (gameManager      == null) { Debug.LogError("Game Manager is NULL"); }
-        // Sprite Array check
     }
 
     private void Start()
@@ -53,7 +52,6 @@ public class UIManager : MonoBehaviour
         InitializeGame();
         StartCoroutine(WatchForGameOver());
         StartCoroutine(WatchForWaveOver());
-        //spiralLaserImage.enabled = false;
     }
 
     //
@@ -119,11 +117,6 @@ public class UIManager : MonoBehaviour
         spiralShotImage.gameObject.SetActive(true); 
     }
 
-    //public void ArmSpiralLaser()
-    //{
-    //    spiralLaserImage.sprite = spiralSprites[1];
-    //}
-
     public void DisableSpiralLaser() { DisArmSpiralLaser(); }
 
     public void StartNewWave()
@@ -165,7 +158,6 @@ public class UIManager : MonoBehaviour
             StartCoroutine(DisplayWaveOver());
     }
 
-
     IEnumerator DisplayGameOver2()
     {
         gameOverText.gameObject.SetActive(true);
@@ -196,7 +188,6 @@ public class UIManager : MonoBehaviour
     //
     // Unused                ============================================================
     //
-
     IEnumerator DisplayWaveOver()
     {
         bool flash;

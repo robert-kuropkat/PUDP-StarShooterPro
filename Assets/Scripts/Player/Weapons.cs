@@ -14,7 +14,6 @@ public class Weapons : MonoBehaviour
     [SerializeField] private int     tripleShotCollectible   = 1;
     [SerializeField] private int     torpedoCollectible      = 1;
     [SerializeField] private int     spiralShotCollectible   = 1;
-    //[SerializeField] private int     ammoStartCount          = 26;
     [SerializeField] private Vector3 laserOffest             = new Vector3(0, 1.006f, 0);
     //
     // Flags
@@ -23,67 +22,13 @@ public class Weapons : MonoBehaviour
     //
     // Game Objects populated in Inspector
     //
-    [SerializeField] private GameObject laserPrefab;
-    [SerializeField] private GameObject tripleShotPrefab;
-    [SerializeField] private GameObject laser360Prefab;
-    [SerializeField] private GameObject torpedoPrefab;
-    [SerializeField] private UIManager  uiManager;
-
-    //
-    // Properties
-    //
-
-    //[SerializeField] private bool laserEnabled = false;
-    //public bool LaserEnabled
-    //{
-    //    get { return laserEnabled; }
-    //    set
-    //    {
-    //        laserEnabled = value;
-    //        if (value) { Laser.Enabled = true;  }
-    //        else       { Laser.Enabled = false; }
-    //    }
-    //}
-
-    //[SerializeField] private bool tripleShotEnabled = false;
-    //public bool TripleShotEnabled
-    //{
-    //    get { return tripleShotEnabled;  }
-    //    set { 
-    //            tripleShotEnabled = value; 
-    //            StartCoroutine(PowerUpTripleShot());
-    //        }
-    //}
-
-    //[SerializeField] private bool torpedoEnabled = false;
-    //public bool TorpedoEnabled
-    //{
-    //    get { return torpedoEnabled; }
-    //    set
-    //    {
-    //        torpedoEnabled = value;
-    //        //if (value) { uiManager.EnableTorpedo(); }
-    //        //else       { uiManager.EnableTorpedo(); }
-    //    }
-    //}
-
-    //[field: SerializeField]
-    //private bool TorpedoArmed { get; set; }
-
-    //[SerializeField] private bool laser360Enabled = false;
-    //public bool Laser360Enabled
-    //{
-    //    get { return laser360Enabled; }
-    //    set
-    //    {
-    //        laser360Enabled = value;
-    //        if (value) { uiManager.EnableSpiralLaser();  }
-    //        else       { uiManager.DisableSpiralLaser(); }
-    //    }
-    //}
-
-    //[field: SerializeField]
-    //private bool Laser360Armed { get; set; }
+    [SerializeField] private GameObject  laserPrefab;
+    [SerializeField] private GameObject  tripleShotPrefab;
+    [SerializeField] private GameObject  laser360Prefab;
+    [SerializeField] private GameObject  torpedoPrefab;
+    [SerializeField] private UIManager   uiManager;
+    [SerializeField] private Boss        enemyBoss;
+    [SerializeField] private GameManager myGameManager;
 
     private void NullCheckOnStartup()
     {
@@ -95,11 +40,8 @@ public class Weapons : MonoBehaviour
     void Start()
     {
         NullCheckOnStartup();
-        //Laser.Count = ammoStartCount;
         uiManager.AmmoCount(Laser.Count);
-        //Laser360Enabled = true;
     }
-
     
     //
     // Public Methods
@@ -127,14 +69,12 @@ public class Weapons : MonoBehaviour
 
     public void ArmLaser()
     {
-        //Laser360Armed = true;
         DisarmWeapons();
         Laser.Armed = true;
         uiManager.ArmLaser();
     }
     public void ArmTripleShot()
     {
-        //Laser360Armed = true;
         DisarmWeapons();
         if (TripleShot.Count < 1) { return; }
         TripleShot.Armed = true;
@@ -147,7 +87,6 @@ public class Weapons : MonoBehaviour
         DisarmWeapons();
         if (Torpedo.Count < 1) { return; }
         Torpedo.Armed = true;
-        //TorpedoArmed = true;
         uiManager.ArmTorpedo();
     }
 
@@ -156,22 +95,18 @@ public class Weapons : MonoBehaviour
         DisarmWeapons();
         if (SpiralShot.Count < 1) { return; }
         SpiralShot.Armed = true;
-        //Laser360Armed = true;
         uiManager.ArmSpiralLaser();
     }
 
     public void FireWeapon()
     {
-        // check if armed...
-        //if (Laser360Enabled && Laser360Armed) { StartCoroutine(Fire360Laser()); return; }
+        if (myGameManager.CurrentWave > 4 && enemyBoss.CurrentState != BossState.Hover) { return; }
         if (SpiralShot.Enabled && SpiralShot.Armed) { StartCoroutine(Fire360Laser()); return; }
-        //if (TorpedoEnabled  && TorpedoArmed)  { FireTorpedo(); return; }
         if (Torpedo.Enabled && Torpedo.Armed)  { FireTorpedo(); return; }
 
         if (laserCoolDown)   { return; }
         if (Laser.Count < 1) { return; }
 
-        //if ( TripleShotEnabled )  
         if   ( TripleShot.Armed )  
              { FireTripleShot(); }
         else { FireLaser();      }
@@ -197,7 +132,6 @@ public class Weapons : MonoBehaviour
     public void ReduceAmmo() 
     { 
         Laser.Count -= negativeAmmoCollectible; 
-        // Need to disable maybe when below 0.
         uiManager.AmmoCount(Laser.Count); 
     }
 
@@ -221,15 +155,12 @@ public class Weapons : MonoBehaviour
 
     private IEnumerator Fire360Laser()
     {
-        //Laser360Enabled = false;
-
         for (int i = 0; i < 36; i++)
         {
             GameObject fire = Instantiate(laser360Prefab, transform.position, Quaternion.identity);
             fire.transform.Rotate(0, 0, fire.transform.rotation.z + (10 * i));
             yield return new WaitForSeconds(0.1f);
         }
-        //Laser360Armed = false;
         SpiralShot.Armed = false;
         SpiralShot.Count--;
             uiManager.SpiralLaserCount(SpiralShot.Count);
@@ -247,7 +178,6 @@ public class Weapons : MonoBehaviour
         Instantiate( torpedoPrefab
                    , transform.position + laserOffest
                    , Quaternion.identity);
-        //if (shot.gameObject.GetComponent<Torpedo>().MyTarget == null) { Debug.Log("Skipping torpedo shot"); return; }
         Torpedo.Count--;
         uiManager.TorpedoCount(Torpedo.Count);
         if (Torpedo.Count<1)
@@ -257,7 +187,6 @@ public class Weapons : MonoBehaviour
             DisarmWeapons();
             ArmLaser();
         }
-        //AmmoCount = AmmoCount - 1;
     }
 
     private void FireLaser()
@@ -295,10 +224,6 @@ public class Weapons : MonoBehaviour
     private IEnumerator PowerUpTripleShot()
     {
         yield return new WaitForSeconds(tripleShotTimer);
-        //TripleShotEnabled = false;
-        //TripleShot.Enabled = false;  if 0
-        //uiManager.DisArmTripleShot();
-        //Debug.Log("Power down tripleshot");
         TripleShot.Count--;
         uiManager.TripleShotCount(TripleShot.Count);
         DisarmWeapons();

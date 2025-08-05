@@ -7,19 +7,26 @@ public class Player : MonoBehaviour
     //
     // Speed, Boundaries and Timers
     //
-    [SerializeField] private float        mySpeed           = 3.5f;
-    [SerializeField] private float        currentSpeed      = 0;
-    [SerializeField] private int          speedUp           = 1;
-    [SerializeField] private float        speedUpTimer      = 5f;
-    [SerializeField] private float        leftRightBoundary = 11.2f;
-    [SerializeField] private float        topBoundary       = 5;
-    [SerializeField] private float        bottomBoundary    = -4;
-    [SerializeField] private float        ThrusterIncrease  = 1.1f;
+    [SerializeField] private float        mySpeed            = 3.5f;
+    [SerializeField] private float        currentSpeed       = 0;
+    [SerializeField] private int          speedUp            = 1;
+    [SerializeField] private float        speedUpTimer       = 5f;
+    [SerializeField] private float        leftRightBoundary  = 11.2f;
+    [SerializeField] private float        topBoundary        = 5;
+    [SerializeField] private float        bottomBoundary     = -4;
+    [SerializeField] private float        ThrusterIncrease   = 1.1f;
+    [SerializeField] private bool         thrusterInCooldown = false;
+    [SerializeField] private int          thrusterMax        = 100;
+    [SerializeField] private int          thrusterCurrent    = 100;
+    [SerializeField] private int          thrusterMin        = 50;
+    [SerializeField] private int          thrusterChange     = 0;
+    [SerializeField] private float        trusterCheckTimer  = 2.0f;
     //
     // Game Counters
     //
     [SerializeField] private int          playerLives       = 3;
     [SerializeField] private int          playerScore       = 0;
+    [SerializeField] private bool         inTestMode        = false;
     //
     // Game Objects populated in Inspector
     //
@@ -31,6 +38,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Weapons      myWeapons;
     [SerializeField] private GameObject[] fireEngineAnims;
     [SerializeField] private MainCamera   mainCamera;
+    [SerializeField] private Canvas       helpScreen;
     //
     // Properties
     //
@@ -48,11 +56,9 @@ public class Player : MonoBehaviour
         get
         {
             
-            //if (!myWeapons.LaserEnabled)          { return false; }
             if (!Laser.Enabled)                   { return false; }
             if (Input.GetKeyDown(KeyCode.Alpha1)) 
             {
-                //myWeapons.DisarmWeapons();
                 Debug.Log("Laser Armed"); return true;  
             }
             return false;
@@ -64,11 +70,9 @@ public class Player : MonoBehaviour
         get
         {
             
-            //if (!myWeapons.TripelShotEnabled)        { return false; }
             if (!TripleShot.Enabled)                 { return false; }
             if (Input.GetKeyDown(KeyCode.Alpha2)) 
             {
-                //myWeapons.DisarmWeapons();
                 Debug.Log("TripleShot Armed"); return true;  
             }
             return false;
@@ -80,11 +84,9 @@ public class Player : MonoBehaviour
         get
         {
 
-            //if (!myWeapons.TorpedoEnabled)        { return false; }
             if (!Torpedo.Enabled) { return false; }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                //myWeapons.DisarmWeapons();
                 Debug.Log("Torpedo Armed"); return true;
             }
             return false;
@@ -96,11 +98,9 @@ public class Player : MonoBehaviour
         get
         {
             
-            //if (!myWeapons.Laser360Enabled)       { return false; }
             if (!SpiralShot.Enabled)              { return false; }
             if (Input.GetKeyDown(KeyCode.Alpha4)) 
             {
-                //myWeapons.DisarmWeapons();
                 Debug.Log("Spiral Armed"); return true; 
             }
             return false;
@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
         get 
         {
             if (  Input.GetKeyDown(KeyCode.Space) 
-               && playerLives > 0) { return true; } 
+               && playerLives > 0 ) { return true; } 
             return false;
         } 
     }
@@ -141,8 +141,21 @@ public class Player : MonoBehaviour
     {
         get
         {
-            if (Input.GetKey(KeyCode.LeftShift)) { return ThrusterIncrease; }
+            if (Input.GetKey(KeyCode.LeftShift) && !thrusterInCooldown) { return ThrusterIncrease; }
             return 0;
+        }
+    }
+
+    private bool displayHelp = false;
+    private bool DisplayHelp
+    {
+        get 
+        {
+            
+            if (( Input.GetKey(KeyCode.F1) || Input.GetKey(KeyCode.H) )
+               && !displayHelp) { Time.timeScale = 0; return true; }
+            Time.timeScale = 1;
+            return false;
         }
     }
 
@@ -152,22 +165,26 @@ public class Player : MonoBehaviour
 
     private void NullCheckOnStartup()
     {
-        //ToDo:  Add actual error handling rather than just a debug message.
         if (spawnManager     == null) { Debug.LogError("The Spawn Manager is NULL."); }
         if (shieldAnim       == null) { Debug.LogError("The Shield Animation is NULL"); }
         if (uiManager        == null) { Debug.LogError("The UI Manager is NULL"); }
         if (gameManager      == null) { Debug.LogError("Game Manager is NULL"); }
     }
 
+    private void RestockPlayer() 
+    {
+        if (playerLives < 3)  { playerLives = 3; }
+        if (Laser.Count < 26) { Laser.Count = 26; }
+    }
+
     private void Start()
     {
         NullCheckOnStartup();
         transform.position = new Vector3(0, 0, 0);
+        RestockPlayer();
+        StartCoroutine(TrusterMonitor());
 
         Laser.Enabled = true;
-        //TripleShot.Enabled = true;
-        //Torpedo.Enabled = true;
-        //SpiralShot.Enabled = true;
     }
 
     private void Update()
@@ -181,25 +198,23 @@ public class Player : MonoBehaviour
         if (PlayerHasArmedTorpedo)    { myWeapons.ArmTorpedo(); }
         
         if (PlayerHasFired)           { myWeapons.FireWeapon(); }
+        if (DisplayHelp) { helpScreen.gameObject.SetActive(true); } else { helpScreen.gameObject.SetActive(false); }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         switch (other.tag)
         {
-            //
-            //  Use new Enum here...
-            //
             case "Enemy":
                 TakeDamage();
                 break;
             case "Enemy Laser":
-                if (other.transform.parent.GetComponent<EnemyFire>().HasHit) { return; }  /// probable when I put it into a container.
+                if (other.transform.parent.GetComponent<EnemyFire>().HasHit) { return; }  
                 other.transform.parent.GetComponent<EnemyFire>().HasHit = true;
                 TakeDamage();
                 break;
             case "SpeedPU":
-                if (speedUp == 1) { StartCoroutine(PowerUpSpeed()); }
+                if (speedUp == 1 && !thrusterInCooldown) { StartCoroutine(PowerUpSpeed()); }
                 break;
             case "ShieldPU":
                 if (!shieldAnim.IsActive) { shieldAnim.IsActive = true; }
@@ -212,14 +227,12 @@ public class Player : MonoBehaviour
                 myWeapons.CollectAmmo();
                 break;
             case "TripleShotPU":
-                //if (!myWeapons.TripleShotEnabled) { myWeapons.TripleShotEnabled = true; }
                 myWeapons.CollectTripelShot();
                 break;
             case "TorpedoPU":
                 myWeapons.CollectTorpedo();
                 break;
             case "SpiralPU":
-                //myWeapons.Laser360Enabled = true;
                 myWeapons.CollectSpiralShot();
                 break;
             case "NegativeAmmoPU":
@@ -236,9 +249,21 @@ public class Player : MonoBehaviour
 
     private IEnumerator PowerUpSpeed()
     {
-        speedUp = 3;  // ToDo: This value should be moved up so it can be changed in the inspector
+        speedUp = 3;
         yield return new WaitForSeconds(speedUpTimer);
         speedUp = 1;
+    }
+
+    private IEnumerator TrusterMonitor()
+    {
+        while (true)
+        {
+            thrusterCurrent += thrusterChange;
+            if (thrusterCurrent > thrusterMax) { thrusterCurrent    = thrusterMax; }
+            if (thrusterCurrent <= 0)          { thrusterInCooldown = true; }
+            if (thrusterCurrent > thrusterMin) { thrusterInCooldown = false; }
+            yield return new WaitForSeconds(trusterCheckTimer);
+        }
     }
 
     //
@@ -248,11 +273,11 @@ public class Player : MonoBehaviour
     private void UpdateThrusterUI()
     {
         int relativeSpeed = 0;
-        if      (Mathf.Approximately(currentSpeed, 0))                                      { relativeSpeed = 0;  }
-        else if (Mathf.Approximately(currentSpeed, mySpeed))                                { relativeSpeed = 25; }
-        else if (Mathf.Approximately(currentSpeed, mySpeed + ThrusterIncrease))             { relativeSpeed = 50; }
-        else if (Mathf.Approximately(currentSpeed, mySpeed * speedUp))                      { relativeSpeed = 75; }
-        else if (Mathf.Approximately(currentSpeed, (mySpeed + ThrusterIncrease) * speedUp)) { relativeSpeed = 100; }
+        if      (Mathf.Approximately(currentSpeed, 0))                                      { relativeSpeed = 0;   thrusterChange =  10; }
+        else if (Mathf.Approximately(currentSpeed, mySpeed))                                { relativeSpeed = 25;  thrusterChange =   5; }
+        else if (Mathf.Approximately(currentSpeed, mySpeed + ThrusterIncrease))             { relativeSpeed = 50;  thrusterChange = -15; }
+        else if (Mathf.Approximately(currentSpeed, mySpeed * speedUp))                      { relativeSpeed = 75;  thrusterChange = -20; }
+        else if (Mathf.Approximately(currentSpeed, (mySpeed + ThrusterIncrease) * speedUp)) { relativeSpeed = 100; thrusterChange = -25; }
         uiManager.UpdateThrusterGuage(relativeSpeed);
     }
 
@@ -285,20 +310,9 @@ public class Player : MonoBehaviour
     //
     // Damage/Health Methods
     //
-
     public void EnemyDestroyed()
     {
         playerScore++;
-        //
-        //  I think this is causing a race condition when two enemy are destroyed
-        //  at the same-ish time.  They each pull the same current value so only 
-        //  one actually deducts.
-        //
-        //  Discovered the Current Enemy Count manages to go to -1 which it should
-        //  not do...
-        //
-        //  Move to a method call instead and keep it internal to GameManager
-        //
         GameManager.CurrentEnemyCount--;
         uiManager.NewScore(playerScore);
     }
@@ -313,6 +327,7 @@ public class Player : MonoBehaviour
     private void TakeDamage()
     {
         mainCamera.PlayerDamage();                          // invoke Main camera shake
+        if (playerLives == 1 && inTestMode) { return; } 
         playerLives--;
         uiManager.CurrentLives(playerLives);                // report current lives count to dashboard
         if (playerLives < 1) { DeathScene(); return; }

@@ -30,7 +30,6 @@ public class Laser : MonoBehaviour
     [SerializeField] private float mySpeed         = 8.0f;
     [SerializeField] private float myTimeOut       = 3f;
     [SerializeField] private float rearLaserOffset = 2.5f;
-    //[SerializeField] private int   ammoStartCount  = 26;
 
     private int laserDirection = 1;
 
@@ -86,9 +85,6 @@ public class Laser : MonoBehaviour
         }
     }
 
-    //
-    //  This is kinda dumb.  Change it Vector3.down
-    //
     private void MoveEnemyLaser()
         { transform.Translate(Vector3.down * (Time.deltaTime * mySpeed * laserDirection)); }
 
@@ -98,7 +94,6 @@ public class Laser : MonoBehaviour
     private void PutInContainer()
     {
         GameObject weaponsContainer = GameObject.FindGameObjectWithTag("Weapons Container");
-        //transform.parent            = weaponsContainer?.transform;
     }
 
 }

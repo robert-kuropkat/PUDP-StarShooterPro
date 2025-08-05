@@ -28,14 +28,12 @@ public class SpawnManager : MonoBehaviour
     private Spawnable   CurrentSpawnadObject       { get; set; }
     private Transform   CurrentSpawnableContainer  { get; set; }
 
-
     //
     // Game Control              ============================================================
     //
 
     private void NullCheckOnStartup()
     {
-        //ToDo:  Add actual error handling rather than just a debug message.
         if (enemyContainer        == null) { Debug.LogError("Enemy Container is NULL"); }
         if (powerUpContainer      == null) { Debug.LogError("PowerUp Container is NULL"); }
         if (gameManager           == null) { Debug.LogError("Game Manager is NULL"); }
@@ -100,14 +98,6 @@ public class SpawnManager : MonoBehaviour
         SpawnWave();
     }
 
-    //
-    //  ToDo:  Once max enemy have spawned, there are no more powerups because the loop ends.
-    //         have not yet decided if this is a feature or bug.
-    //  ToDo:  Currently no end of game mangement.  Game will error out if you attempt to 
-    //         continue beyond last defined wave.  Have not yet decided if this will be
-    //         Game Over, or if we will apply a calculation there after to make it infinite.
-    //
-
     private IEnumerator SpawnRoutine()
     {
         GameManager.CurrentEnemyCount += currentWave.NumberOfEnemyToSpawn;
@@ -139,7 +129,7 @@ public class SpawnManager : MonoBehaviour
             if (CurrentSpawnadObject.Type == SpawnableTypes.Enemy
                && Random.Range(0f, 100f) <= currentWave.AggressiveEnemyPercentage
                )
-            { newSpawnable.GetComponent<Enemy>().ActivateAgression(); }
+               { newSpawnable.GetComponent<Enemy>().ActivateAgression(); }
 
             yield return new WaitForSeconds(Random.Range( currentWave.SpawnRateRange[0]
                                                         , currentWave.SpawnRateRange[1]));
@@ -149,16 +139,16 @@ public class SpawnManager : MonoBehaviour
     private IEnumerator SpawnMinions()
     {
         yield return new WaitForSeconds(5);
-        while (!gameManager.WaveOver)
-        {
-            for (int i=0;i<5;i++)
+        while (!gameManager.GameOver)
             {
-                GameManager.CurrentEnemyCount++;
-                GameManager.CurrentEnemyCount++;
-                Instantiate(enemyMinionLeft , enemyContainer.transform);
-                Instantiate(enemyMinionRight, enemyContainer.transform);
-                yield return new WaitForSeconds(.5f);
-            }
+                for (int i=0;i<5;i++)
+                {
+                    GameManager.CurrentEnemyCount++;
+                    GameManager.CurrentEnemyCount++;
+                    Instantiate(enemyMinionLeft , enemyContainer.transform);
+                    Instantiate(enemyMinionRight, enemyContainer.transform);
+                    yield return new WaitForSeconds(.5f);
+                }
             yield return new WaitForSeconds(20);
         }
     }

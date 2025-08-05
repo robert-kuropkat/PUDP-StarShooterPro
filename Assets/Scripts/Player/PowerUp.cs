@@ -8,6 +8,7 @@ public class PowerUp : MonoBehaviour, ISpawnable
     // Speed and Timers
     //
     [SerializeField] private float     myTimeOut = 5f;
+
     //
     // Game Objects populated in Inspector
     //
@@ -17,7 +18,6 @@ public class PowerUp : MonoBehaviour, ISpawnable
     //
     // Game Objects non-Serialized objects are populated in code
     //
-
     private Player myPlayer;
 
     //
@@ -37,7 +37,6 @@ public class PowerUp : MonoBehaviour, ISpawnable
         public float Y { get { return _y; } }
     }
     [SerializeField] protected Boundary ScreenBoundary = new Boundary(9.5f, 6.0f);
-    //[SerializeField] protected Boundary HorizontalSpawnBoundary = new Boundary(11.5f, 5.0f);
     [SerializeField] protected Boundary VerticalSpawnBoundary = new Boundary(8.5f, 8.0f);
 
     protected Vector3 SpawnPosition
@@ -49,8 +48,6 @@ public class PowerUp : MonoBehaviour, ISpawnable
                               , VerticalSpawnBoundary.Y, 0);
         }
     }
-
-
 
     //
     // Game Control             ============================================================
@@ -112,8 +109,6 @@ public class PowerUp : MonoBehaviour, ISpawnable
     {
         chaseVector.x = (myPlayer.transform.position.x - transform.position.x);
         chaseVector.y = (myPlayer.transform.position.y - transform.position.y);
-        //chaseVector.x = (myPlayer.transform.position.x - transform.position.x) / proximityCollider.radius;
-        //chaseVector.y = (myPlayer.transform.position.y - transform.position.y) / proximityCollider.radius;
     }
 
 }

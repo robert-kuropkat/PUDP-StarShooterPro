@@ -4,24 +4,16 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    [SerializeField] private BossState     CurrentState { get; set; } = BossState.Enter;
+    [SerializeField] public BossState     CurrentState { get; set; } = BossState.Enter;
     [SerializeField] private float         MySpeed      { get; set; } = 2f;
     [SerializeField] private float         StopSpot     { get; set; } = 3.5f;
     [SerializeField] private float         HoverSpot    { get; set; } = 6.75f;
     [SerializeField] private GameManager   gameManager;
     [SerializeField] private Animator      myExplosion;
     [SerializeField] private Player        myPlayer;
-    //[SerializeField] private GameManager   gameManager;
 
     private int Health { get; set; } = 10;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         switch (CurrentState)
@@ -69,7 +61,7 @@ public class Boss : MonoBehaviour
 
     private void Hover()
     {
-        CurrentState = BossState.None;
+        CurrentState = BossState.Hover;
     }
 
     private void Attack()
@@ -99,27 +91,27 @@ public class Boss : MonoBehaviour
     private IEnumerator TriggerExplosions()
     {
         Vector3 _myPos = transform.position;
-        Instantiate(myExplosion, _myPos + new Vector3(  0, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3(  0, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3(  2, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3(  2, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3( -2, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3( -2, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3(  4, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3(  4, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3( -4, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3( -4, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3(  6, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3(  6, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3( -6, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3( -6, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3(  8, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3(  8, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3( -8, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3( -8, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3( 10, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3( 10, 0, 0), Quaternion.identity), 4f);
         yield return new WaitForSeconds(0.2f);
-        Instantiate(myExplosion, _myPos + new Vector3(-10, 0, 0), Quaternion.identity);
+        Destroy(Instantiate(myExplosion, _myPos + new Vector3(-10, 0, 0), Quaternion.identity), 4f);
         Debug.Log("X = +- 10");
         yield return new WaitForSeconds(0.2f);
     }

@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private static int currentEnemyCount = 0;
     public static int CurrentEnemyCount
     {
-        get { return currentEnemyCount; }
+        get { return currentEnemyCount;  }
         set { currentEnemyCount = value; }
     }
 

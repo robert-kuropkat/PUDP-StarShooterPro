@@ -52,7 +52,6 @@ public class Asteroid : MonoBehaviour
     private void GameOn() 
     { 
         myGameManager.GameLive    = true;
-        //myGameManager.CurrentWave = 1;
     }
 
     private void DestroyMyself()
@@ -73,6 +72,8 @@ public class Asteroid : MonoBehaviour
     }
 
     private void TriggerExplosion() 
-        { Instantiate(myExplosion, transform.position, Quaternion.identity); }
+    {
+        Instantiate(myExplosion, transform.position, Quaternion.identity);
+    }
 
 }

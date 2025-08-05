@@ -9,11 +9,6 @@ public class EnemyShields : MonoBehaviour
     // Timers, counters, etc.
     //
 
-    //[SerializeField] private int shieldsUpTimer = 15;
-    //[SerializeField] private int shieldsWarningTimer = 5;
-    //[SerializeField] private int hitsLeft = 0;
-    //[SerializeField] private int hitLimit = 3;
-
     //
     // Game Objects
     //
@@ -57,7 +52,6 @@ public class EnemyShields : MonoBehaviour
 
     void Start()
     {
-        //spriteRenderer = GetComponent<SpriteRenderer>();
         NullCheckOnStartup();
     }
 
@@ -73,8 +67,6 @@ public class EnemyShields : MonoBehaviour
                 TakeDamage();
                 break;
             case "Laser":
-//                if (other.transform.parent.GetComponent<EnemyFire>().HasHit) { return; }
-//                other.transform.parent.GetComponent<EnemyFire>().HasHit = true;
                 TakeDamage();
                 break;
             default:

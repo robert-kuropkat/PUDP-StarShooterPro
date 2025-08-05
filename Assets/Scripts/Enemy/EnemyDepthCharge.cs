@@ -28,7 +28,6 @@ public class EnemyDepthCharge : MonoBehaviour
     //
     // Properties
     //
-    //protected bool ImDead { get; set; } = false;
 
     //
     // Game Control             ============================================================
@@ -66,23 +65,15 @@ public class EnemyDepthCharge : MonoBehaviour
     //
     private void Update()
     { 
-        //if (ImDead) { return; }
         MoveMe(); 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //ImDead = true;
         if (collision.tag != "Player") { return; }
         myRigidBody.AddForce(transform.up * bounceForce);
         transform.Rotate(0, 0, Random.Range(0,360));
     }
-    /*
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (gameObject.tag == "Enemy") { Debug.Log("In the Blast Zone!"); }
-    }
-    */
     //
     // Watchdogs
     //
@@ -111,7 +102,6 @@ public class EnemyDepthCharge : MonoBehaviour
     {
         SetBlastRadius();
         StopObjectMotion();
-        //DisableCollisionComponenets();
         TriggerExplosion();
         HideObject();
         Destroy(this.gameObject, explosionTimer);

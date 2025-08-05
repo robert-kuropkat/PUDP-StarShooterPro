@@ -22,30 +22,14 @@ public class EnemyHorizontalZigZag : EnemyHorizontal
     [SerializeField] private EnemyDepthCharge myDepthCharge;
 
     //
-    // Properties
-    //
-/*
-    [SerializeField] protected float mySpeed = 4.0f;
-    public    override float   MySpeed { get { return mySpeed; } set { mySpeed = value; } }
-*/
-    //
     // Game Loop
     //
     protected override void Start()
     {
         base.Start();
-//        transform.position = SpawnPosition;
-//        transform.rotation = Quaternion.identity;
         StartCoroutine(ChangeDirection());
     }
 
-    //
-    // Game Object Control Methods
-    //
-/*
-    protected void Teleport()
-    { transform.position = SpawnPosition; }
-*/
     //
     //  Watchdogs
     //

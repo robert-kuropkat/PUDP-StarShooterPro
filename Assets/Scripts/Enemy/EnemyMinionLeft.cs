@@ -29,7 +29,6 @@ public class EnemyMinionLeft : EnemyMinion
         transform.Translate((Vector3.down + chaseVector) * (Time.deltaTime * mySpeed));
         if (transform.position.y > 2.93)
         {
-            //newPosition.x = 5*((-1.5f * (.5f * transform.position.y + 10)) / (19 * transform.position.y - 50));
             newPosition.x = -1f;
             newPosition.y = transform.position.y;
             transform.position = newPosition;

@@ -34,35 +34,15 @@ public class Torpedo : MonoBehaviour
 
 
     //
-    // Game Objects non-Serialized objects populated in code
-    //
-
-    // private Rigidbody2D rb;
-
-    //
-    // Properties
-    //
-
-    //private GameObject myTarget;
-    //public GameObject MyTarget 
-    //{
-    //    get { return myTarget; }
-    //    set { myTarget = value; }
-    //}
-
-    //
     // Game Control
     //
 
     void Start()
     {
-        //rb = GetComponent<Rigidbody2D>();
-        //FindTarget();
         PutInContainer();
         Destroy(this.gameObject, myTimeOut);
     }
 
-    // Update is called once per frame
     void Update()
     {
         MoveMe();
@@ -88,31 +68,18 @@ public class Torpedo : MonoBehaviour
     }
 
     private void MoveMe()
-    //{ transform.Translate(Vector3.up * (Time.deltaTime * mySpeed)); }
     {
-        //transform.up = myTarget.transform.position - transform.position;
-        //rb.velocity  = transform.up * mySpeed;
-        //transform.Translate(transform.up * mySpeed);
 
         if (MyTarget != null)
         {
             Debug.Log(MyTarget.name);
-            //myTarget.GetComponentInChildren<EnemyShields>().IsActive = true;
             transform.up = MyTarget.transform.position - transform.position;
             transform.Translate(Vector3.up * (Time.deltaTime * mySpeed));
-
-
-            //float rot_z = Mathf.Atan2(myTarget.transform.position.y - transform.position.y
-            //                         , myTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
-            //transform.eulerAngles = new Vector3(0f, 0f, rot_z - 90);
-            //transform.Translate(transform.up * (Time.deltaTime * mySpeed));
         }
-        //else { Destroy(this.gameObject); }
     }
 
     public static void FindTarget()
     {
         MyTarget = GameObject.FindWithTag("Enemy");
-        //if (MyTarget == null) { Destroy(this.gameObject); Debug.Log("Null Target"); } // make myTarget public so we can check for it.
     }
 }

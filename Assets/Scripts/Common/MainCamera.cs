@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
+    [SerializeField] Vector3 startPosition;
+
+    private void Start()
+    {
+        startPosition = this.transform.position;
+    }
     public void PlayerDamage() { StartCoroutine(CameraShake(1.0f, 0.75f, 0.2f)); }
 
     private IEnumerator CameraShake(float shakeDuration, float shakeMagnatude, float interpolationIncrement)
@@ -22,5 +28,6 @@ public class MainCamera : MonoBehaviour
             shakeElapsed += Time.deltaTime;
             yield return null;
         }
+        this.transform.position = startPosition;
     }
 }

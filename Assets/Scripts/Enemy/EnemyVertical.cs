@@ -18,8 +18,6 @@ public class EnemyVertical : Enemy
         }
     }
 
-    //protected override Vector3 MoveDirection { get; set; }
-
     //
     // Game Loop
     //

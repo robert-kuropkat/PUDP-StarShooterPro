@@ -19,9 +19,6 @@ public abstract class EnemyMinion : Enemy
     // Properties
     //
 
-    //
-    // ToDo: Will have to change SpawnBoundary based on which pattern
-    //
     [SerializeField] MinionPattern travlelPattern = MinionPattern.Pattern_1;
     protected MinionPattern TravelPattern
     {
@@ -29,16 +26,8 @@ public abstract class EnemyMinion : Enemy
         set { travlelPattern = value; }
     }
 
-    //
-    //  ToDo:  Probably slower speed since there will be so many
-    //
-
     [SerializeField] protected float mySpeed = 5.0f;
     public override float MySpeed { get { return mySpeed; } set { mySpeed = value; } }
-    //
-    // ToDo:  Might not need this anymore...
-    //
-    //protected override Vector3 MoveDirection { get; set; }
 
     //
     // Game Object Control Methods
